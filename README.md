@@ -1,5 +1,5 @@
 # Panlasang Panahon
-Final project for the course CSIS 3175
+Final project for the course CSIS 3275
 
 ## MEMBERS:
 * [Charlie Medialdea](https://github.com/charlz1202)
