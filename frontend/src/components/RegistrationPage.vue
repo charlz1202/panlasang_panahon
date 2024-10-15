@@ -2,9 +2,10 @@
   <div>
     <h1>Register</h1>
     <form @submit.prevent="registerUser">
+      <input type="text" v-model="fullname" placeholder="Full Name" required />
       <input type="email" v-model="email" placeholder="Email" required />
       <input type="password" v-model="password" placeholder="Password" required />
-      <input type="text" v-model="location" placeholder="Location" required />
+      <input type="text" v-model="location" placeholder="Address" required />
       <input type="text" v-model="phone" placeholder="Phone" required />
       <button type="submit">Register</button>
     </form>
@@ -18,6 +19,7 @@ export default {
   name: 'RegistrationPage', // Changed to multi-word name
   data() {
     return {
+      fullname: '',
       email: '',
       password: '',
       location: '',
@@ -33,6 +35,7 @@ export default {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            fullname: this.fullname,
             email: this.email,
             password: this.password,
             location: this.location,
