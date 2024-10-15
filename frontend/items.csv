@@ -1,0 +1,4 @@
+id,name,description,price,category,weather,restaurant,filename
+1,Spaghetti,Delicious Italian pasta,12.5,MAIN_DISH,HOT,1,img1.jpg
+2,Cheesecake,Classic cheesecake dessert,5.0,DESSERT,COLD,1,img2.jpg
+3,Lemonade,Freshly squeezed lemonade,3.5,DRINK,BOTH,2,img3.jpg
