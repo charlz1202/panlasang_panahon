@@ -10,8 +10,6 @@
 
 # Eclipse #
 .settings
-.project
-.classpath
 .studio
 target
 
