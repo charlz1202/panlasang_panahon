@@ -1,8 +1,7 @@
 <template>
   <div id="app">
     <nav>
-      <router-link to="/shop">Shop Items</router-link> |
-      <router-link to="/register">Register</router-link> |
+      <router-link to="/shop">Shop Items</router-link> | 
       <!-- Conditionally render Login/Logout based on user's login status -->
       <router-link v-if="!isLoggedIn" to="/login">
         <a href="#">Login</a>
@@ -61,7 +60,6 @@ nav {
   margin-bottom: 20px;
 }
 nav a {
-  margin: 0 10px;
   text-decoration: none;
   color: #42b983;
   cursor: pointer;
