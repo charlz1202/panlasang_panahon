@@ -2,6 +2,9 @@ package com.example.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.demo.model.Item;
+import com.example.demo.model.Restaurant;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -53,6 +56,11 @@ public class UserService {
         	System.out.println("User " + email + "does not exist.");
         }
         return false;  // User not found or password does not match
+    }
+    
+    // Get user by email
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
     }
 
 }

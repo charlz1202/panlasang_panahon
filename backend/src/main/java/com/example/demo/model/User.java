@@ -19,7 +19,7 @@ public class User {
     private Long id;
     
     @NotBlank(message = "Full name is mandatory")
-    private String fullName;
+    private String fullname;
 
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Email should be valid")
@@ -47,12 +47,12 @@ public class User {
         this.id = id;
     }
     
-    public String getFullName() {
-        return fullName;
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     public String getEmail() {

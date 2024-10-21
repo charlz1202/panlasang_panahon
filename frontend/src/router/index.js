@@ -8,7 +8,7 @@ import ShopItems from '../components/ShopItems.vue';
 
 const routes = [
   { path: '/', component: HomePage },
-  { path: '/login', component: LoginPage },
+  { path: '/login', name: 'login', component: LoginPage },
   { path: '/register', component: RegistrationPage },
   { path: '/upload/restaurant', component: UploadRestaurant },
   { path: '/upload/item', component: UploadItem },

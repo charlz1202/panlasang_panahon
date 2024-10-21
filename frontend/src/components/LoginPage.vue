@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'LoginPage', // Changed to multi-word name
+  name: 'LoginPage',
   data() {
     return {
       email: '',
@@ -23,27 +23,37 @@ export default {
   methods: {
     async loginUser() {
       try {
-          const response = await fetch('http://localhost:8080/api/users/login', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                  email: this.email,
-                  password: this.password,
-              }),
-          });
+        const response = await fetch('http://localhost:8080/api/users/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: this.email,
+            password: this.password,
+          }),
+        });
 
-          const data = await response.json();
+        const data = await response.json();
 
-          if (response.ok) {
-              this.$router.push('/dashboard');  // Redirect to a protected page after login
-          } else {
-              alert(data.message || 'Invalid credentials');
-          }
+        if (response.ok) {
+          // Save user data in localStorage
+          const user = {
+            phone: data.id,
+            email: data.email,
+            fullname: data.fullname,
+            location: data.location,  // Assuming location is returned from the backend
+          };
+
+          localStorage.setItem('user', JSON.stringify(user));  // Store user data
+          this.$emit('login');
+          this.$router.push('/shop');  // Redirect to shop page after login
+        } else {
+          alert(data.message || 'Invalid credentials');
+        }
       } catch (error) {
-          console.error('Error during login:', error);
-          alert('Failed to login. Please check the console for details.');
+        console.error('Error during login:', error);
+        alert('Failed to login. Please check the console for details.');
       }
     },
 

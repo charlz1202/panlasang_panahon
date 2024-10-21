@@ -2,7 +2,7 @@
   <div>
     <h2>Shop Items</h2>
 
-    <!-- Filter by Category, Weather, and Location -->
+    <!-- Filter by Category and Weather -->
     <div class="filters">
       <label for="category">Category:</label>
       <select v-model="selectedCategory">
@@ -17,14 +17,6 @@
         <option value="">All</option>
         <option value="HOT">Hot</option>
         <option value="COLD">Cold</option>
-      </select>
-
-      <label for="location">Location:</label>
-      <select v-model="selectedLocation">
-        <option value="">All</option>
-        <option v-for="location in availableLocations" :key="location" :value="location">
-          {{ location }}
-        </option>
       </select>
     </div>
 
@@ -66,24 +58,20 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      items: [],              // All items loaded from the backend
-      cart: [],               // Cart items
-      selectedCategory: '',   // Filter category
-      selectedWeather: '',    // Filter weather
-      selectedLocation: '',   // Selected location
-      availableLocations: [], // Available locations
-      userLocation: '',       // Saved location of the logged-in user
-      orderSuccess: false,    // To display success message on order
+      items: [],            // All items loaded from the backend
+      cart: [],             // Cart items
+      selectedCategory: '', // Filter category
+      selectedWeather: '',  // Filter weather
+      orderSuccess: false,  // To display success message on order
     };
   },
   computed: {
-    // Filter items based on selected category, weather, and location
+    // Filter items based on selected category and weather
     filteredItems() {
       return this.items.filter(item => {
         const matchesCategory = !this.selectedCategory || item.category === this.selectedCategory;
         const matchesWeather = !this.selectedWeather || item.weather === this.selectedWeather || item.weather === "BOTH";
-        const matchesLocation = !this.selectedLocation || item.restaurant.location === this.selectedLocation;
-        return matchesCategory && matchesWeather && matchesLocation;
+        return matchesCategory && matchesWeather;
       });
     },
     totalCartPrice() {
@@ -96,20 +84,7 @@ export default {
       try {
         const response = await axios.get('http://localhost:8080/api/items');
         this.items = response.data;
-
-        // Extract locations from the items
-        this.availableLocations = [...new Set(this.items.map(item => item.restaurant.location))];
-
-
-        // If user is logged in, get user location and filter items
-        if (localStorage.getItem('user')) {
-          const user = JSON.parse(localStorage.getItem('user'));
-          if (user && user.location) {
-            this.userLocation = user.location;
-            this.selectedLocation = user.location; // Set location based on the user's saved location
-          }
-        }
-
+        console.log(this.items);
       } catch (error) {
         console.error('Error fetching items:', error);
       }

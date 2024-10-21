@@ -2,16 +2,54 @@
   <div id="app">
     <nav>
       <router-link to="/shop">Shop Items</router-link> |
-      <router-link to="/register">Register</router-link> | 
-      <router-link to="/login">Login</router-link>
+      <router-link to="/register">Register</router-link> |
+      <!-- Conditionally render Login/Logout based on user's login status -->
+      <router-link v-if="!isLoggedIn" to="/login">
+        <a href="#">Login</a>
+      </router-link>
+      <a v-if="isLoggedIn" href="#" @click="logoutUser">Logout</a>
     </nav>
-    <router-view></router-view> <!-- Will render the routed components -->
+    <router-view :isLoggedIn="isLoggedIn" @login="handleLogin" />
   </div>
 </template>
 
 <script>
+import { ref, watchEffect } from 'vue';
+
 export default {
   name: 'App',
+  setup() {
+    // Track login status based on 'user' in localStorage
+    const isLoggedIn = ref(!!localStorage.getItem('user'));
+
+    // Watch localStorage to reactively update isLoggedIn
+    watchEffect(() => {
+      isLoggedIn.value = !!localStorage.getItem('user');
+    });
+
+    // Function to logout the user
+    const logoutUser = () => {
+      try {
+        // Clear user data from localStorage
+        localStorage.removeItem('user');
+
+        // Set isLoggedIn to false to hide logout and show login
+        isLoggedIn.value = false;
+
+        // Optionally, redirect to login page after logout
+        window.location.href = '/login'; // Reload page to update state
+      } catch (error) {
+        console.error('Error during logout:', error);
+      }
+    };
+
+    // Handle successful login
+    const handleLogin = () => {
+      isLoggedIn.value = true;
+    };
+
+    return { isLoggedIn, logoutUser, handleLogin };
+  }
 };
 </script>
 
@@ -26,8 +64,9 @@ nav a {
   margin: 0 10px;
   text-decoration: none;
   color: #42b983;
+  cursor: pointer;
 }
-nav a.router-link-exact-active {
-  font-weight: bold;
+nav a:hover {
+  text-decoration: underline;
 }
 </style>
