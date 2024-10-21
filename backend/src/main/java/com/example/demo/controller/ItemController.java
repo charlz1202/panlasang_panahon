@@ -43,9 +43,9 @@ public class ItemController {
     }*/
     
     @PostMapping("/save")
-    public ResponseEntity<Item> saveItem(@RequestBody Item item, @RequestParam Long restaurantId) {
+    public ResponseEntity<Item> saveItem(@RequestBody Item item) {
         try {
-            Item savedItem = itemService.saveItem(item, restaurantId);
+            Item savedItem = itemService.saveItem(item);
             return ResponseEntity.ok(savedItem);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(null);

@@ -46,3 +46,5 @@ selenium-debug.log
 
 !.mvn/wrapper/maven-wrapper.jar
 /.metadata/
+.metadata/
+backend/.metadata/

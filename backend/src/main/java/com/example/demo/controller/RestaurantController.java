@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.Item;
 import com.example.demo.model.Restaurant;
 import com.example.demo.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,12 @@ public class RestaurantController {
     @Autowired
     private RestaurantService restaurantService;
 
+    // Get all restaurants
+    @GetMapping
+    public List<Restaurant> getAllRestaurants() {
+        return restaurantService.getAllRestaurants();
+    }
+    
     // Endpoint to create a new restaurant
     @PostMapping
     public ResponseEntity<Restaurant> createRestaurant(@Valid @RequestBody Restaurant restaurant) {

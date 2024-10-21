@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.model.Item;
 import com.example.demo.model.Restaurant;
 import com.example.demo.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,11 @@ public class RestaurantService {
         return restaurantRepository.save(restaurant);
     }
 
+    // Get all restaurants
+    public List<Restaurant> getAllRestaurants() {
+        return restaurantRepository.findAll();
+    }
+    
     // Find a restaurant by id
     public Restaurant getRestaurantById(Long id) {
         return restaurantRepository.findById(id).orElse(null);

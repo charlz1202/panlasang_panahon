@@ -20,8 +20,9 @@ public class ItemService {
     private RestaurantRepository restaurantRepository;
 
     // Save an item
-    public Item saveItem(Item item, Long restaurantId) {
+    public Item saveItem(Item item) {
         // Fetch the related Restaurant using its ID
+    	Long restaurantId = item.getRestaurant().getId();
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(restaurantId);
         if (restaurantOptional.isPresent()) {
             item.setRestaurant(restaurantOptional.get()); // Set the restaurant in the item

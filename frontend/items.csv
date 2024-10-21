@@ -1,4 +1,5 @@
 id,name,description,price,category,weather,restaurant,filename
-1,Spaghetti,Delicious Italian pasta,12.5,MAIN_DISH,HOT,1,img1.jpg
-2,Cheesecake,Classic cheesecake dessert,5.0,DESSERT,COLD,1,img2.jpg
-3,Lemonade,Freshly squeezed lemonade,3.5,DRINK,BOTH,2,img3.jpg
+1,Beef Bulalo,Savory Beef,17.5,MAIN_DISH,COLD,1,img1.jpg
+2,Cheesecake,Classic cheesecake dessert,5,DESSERT,BOTH,1,img2.jpg
+3,Lemonade,Freshly squeezed lemonade,3.5,DRINK,HOT,2,img3.jpg
+4,Green Tea,Freshly brewed tea,3.5,DRINK,COLD,2,img4.jpg
