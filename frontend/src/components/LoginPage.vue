@@ -1,13 +1,14 @@
 <template>
-  <div>
-    <h1>Login</h1>
-    <form @submit.prevent="loginUser">
-      <input type="email" v-model="email" placeholder="Email" required />
-      <input type="password" v-model="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account?</p>
-    <button @click="redirectToRegistration">Register here</button>
+  <div class="container d-flex flex-column min-vh-100 justify-content-center align-items-center " style="max-width: 600px">
+    <h2 class="mb-3">Panlasang Panahon</h2>
+    <div class="row" style="max-width: 300px">
+      <form class="form-login" @submit.prevent="loginUser">
+        <input class="form-control" type="email" v-model="email" placeholder="Email" required />
+        <input class="form-control" type="password" v-model="password" placeholder="Password" required />
+        <button class="btn btn-primary w-100 mt-2" type="submit">Login</button>
+      </form>
+      <p>Don't have an account? <a href="#" @click="redirectToRegistration">Register here</a></p>
+    </div>
   </div>
 </template>
 
@@ -63,3 +64,7 @@ export default {
   },
 };
 </script>
+
+<style>
+  .form-login input:focus {z-index: 1;}.form-login .form-control {position: relative;}
+</style>

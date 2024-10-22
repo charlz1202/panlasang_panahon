@@ -51,8 +51,11 @@ export default {
             const restaurants = dataWithoutHeader.map(row => ({
               id: row[0],
               name: row[1],
-              location: row[2],
-              phone: row[3]
+              address: row[2],
+              city: row[3],
+              province: row[4],
+              postalcode: row[5],
+              phone: row[6]
             }));
 
             // Send the parsed data to the Spring Boot backend

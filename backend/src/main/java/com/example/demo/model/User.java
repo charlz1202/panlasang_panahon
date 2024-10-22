@@ -30,8 +30,20 @@ public class User {
     private String password;
     
 
-    @NotBlank(message = "Location is mandatory")
-    private String location;
+    @NotBlank(message = "Address is mandatory")
+    private String address1;
+    
+    private String address2;
+    
+    @NotBlank(message = "City is mandatory")
+    private String city;
+    
+    @NotBlank(message = "Province is mandatory")
+    private String province;
+    
+    @NotBlank(message = "Postal code is mandatory")
+    private String postalcode;
+    
 
     @NotBlank(message = "Phone number is mandatory")
     @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Phone number is invalid")
@@ -73,19 +85,65 @@ public class User {
     }
 
     
-    public String getLocation() {
-        return location;
-    }
+    public String getAddress1() {
+		return address1;
+	}
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+	public void setAddress1(String address1) {
+		this.address1 = address1;
+	}
 
-    public String getPhone() {
+	public String getAddress2() {	
+		return address2;
+	}
+
+	public void setAddress2(String address2) {
+		this.address2 = address2;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getPostalcode() {
+		return postalcode;
+	}
+
+	public void setPostalcode(String postalcode) {
+		this.postalcode = postalcode;
+	}
+
+	public String getPhone() {
         return phone;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+    
+    public String getLocation() {
+    	return city;
+    }
+    
+    public String getAddress() {
+    	String address = "";
+    	address = address1;
+    	if (address2 != null) {
+    		address = address + ", " + address2;
+    	}
+    	address = address + ", " + city + ", " + province + ", " + postalcode;
+    	return address;
     }
 }

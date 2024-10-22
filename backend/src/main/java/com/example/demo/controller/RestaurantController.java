@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Item;
 import com.example.demo.model.Restaurant;
 import com.example.demo.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/restaurants") // comment this when enabling the delete mapping
@@ -31,12 +33,19 @@ public class RestaurantController {
         return ResponseEntity.ok(savedRestaurant);
     }
 
-    // Endpoint to get a restaurant by ID
+    
+ // Endpoint to get a restaurant by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Restaurant> getRestaurant(@PathVariable Long id) {
+    public ResponseEntity<?> getRestaurant(@PathVariable Long id) {
         Restaurant restaurant = restaurantService.getRestaurantById(id);
         if (restaurant != null) {
-            return ResponseEntity.ok(restaurant);
+        	Map<String, Object> response = new HashMap<>();
+        	response.put("id", restaurant.getId());
+        	response.put("name", restaurant.getName());
+            response.put("address", restaurant.getFullAddress());
+            response.put("phone", restaurant.getPhone());
+            response.put("location", restaurant.getLocation());  
+            return ResponseEntity.ok().body(response);
         } else {
             return ResponseEntity.notFound().build();
         }

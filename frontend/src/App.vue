@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav>
+    <nav v-if="showNavBar">
       <router-link to="/shop">Shop Items</router-link> | 
       <!-- Conditionally render Login/Logout based on user's login status -->
       <router-link v-if="!isLoggedIn" to="/login">
@@ -14,10 +14,12 @@
 
 <script>
 import { ref, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
 
 export default {
   name: 'App',
   setup() {
+    const route = useRoute();
     // Track login status based on 'user' in localStorage
     const isLoggedIn = ref(!!localStorage.getItem('user'));
 
@@ -47,7 +49,13 @@ export default {
       isLoggedIn.value = true;
     };
 
-    return { isLoggedIn, logoutUser, handleLogin };
+    // show or hide the navbar based on the current route
+    const showNavBar = ref(true);
+    watchEffect(() => {
+      showNavBar.value = (route.path !== '/login' && route.path !== '/register'); // Hide navbar if the route is '/login'
+    });
+
+    return { isLoggedIn, logoutUser, handleLogin, showNavBar };
   }
 };
 </script>

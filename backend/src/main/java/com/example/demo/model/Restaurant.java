@@ -18,10 +18,19 @@ public class Restaurant {
 
     @NotBlank(message = "Restaurant name is mandatory")
     private String name;
-
-    @NotBlank(message = "Location is mandatory")
-    private String location;
-
+    
+    @NotBlank(message = "Address is mandatory")
+    private String address;
+    
+    @NotBlank(message = "City is mandatory")
+    private String city;
+    
+    @NotBlank(message = "Province is mandatory")
+    private String province;
+    
+    @NotBlank(message = "Postal code is mandatory")
+    private String postalcode;
+    
     @NotBlank(message = "Phone number is mandatory")
     @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Phone number is invalid")
     private String phone;
@@ -42,15 +51,39 @@ public class Restaurant {
 
     public void setName(String name) {
         this.name = name;
-    }
+    }    
 
-    public String getLocation() {
-        return location;
-    }
+    public String getAddress() {
+		return address;
+	}
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getPostalcode() {
+		return postalcode;
+	}
+
+	public void setPostalcode(String postalcode) {
+		this.postalcode = postalcode;
+	}
 
     public String getPhone() {
         return phone;
@@ -58,5 +91,13 @@ public class Restaurant {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+    
+    public String getLocation() {
+        return city;
+    }
+    
+    public String getFullAddress() {
+    	return address + ", " + city + ", " + province + ", " + postalcode;
     }
 }

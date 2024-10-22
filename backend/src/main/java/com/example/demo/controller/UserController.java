@@ -2,14 +2,12 @@ package com.example.demo.controller;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.model.Restaurant;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 
@@ -38,7 +36,9 @@ public class UserController {
         		Map<String, Object> response = new HashMap<>();
 	            response.put("fullname", authenticatedUser.getFullname());
 	            response.put("email", authenticatedUser.getEmail());
-	            response.put("location", authenticatedUser.getLocation());  // Assuming location is stored in the User object
+	            response.put("phone", authenticatedUser.getPhone());
+	            response.put("location", authenticatedUser.getLocation());  
+	            response.put("address", authenticatedUser.getAddress());
 	            return ResponseEntity.ok().body(response);
         	} else {
         		return ResponseEntity.notFound().build();
