@@ -1,8 +1,7 @@
-# project1
-
 ## Project setup
 ```
 npm install
+npm install bootstrap bootstrap-icons
 ```
 
 ### Compiles and hot-reloads for development
