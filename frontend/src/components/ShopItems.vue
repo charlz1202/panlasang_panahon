@@ -36,8 +36,12 @@
           <h3>{{ item.name }}</h3>
           <p>{{ item.description }}</p>
           <p>Available at <b>{{ item.restaurant.name }}</b></p>
-          <p><strong>${{ item.price }}</strong></p>
-          <button @click="addToCart(item)">Add to Cart</button>
+          
+          <!-- Container for price and button at the bottom -->
+          <div class="card-bottom">
+            <p class="price"><strong>${{ item.price }}</strong></p>
+            <button @click="addToCart(item)">Add to Cart</button>
+          </div>
         </div>
       </div>
     </div>
@@ -180,7 +184,7 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.2s ease;
-  height: 100%; /* Ensure the card takes up full height */
+  height: 100%;
 }
 
 .card:hover {
@@ -198,6 +202,20 @@ export default {
   width: 100%;
   height: 150px;
   object-fit: cover;
+}
+
+/* Flex container for price and button */
+.card-bottom {
+  margin-top: auto; /* Push the card-bottom container to the bottom */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center price and button horizontally */
+}
+
+.price {
+  margin-bottom: 10px;
+  font-size: 1.2em;
+  color: #333;
 }
 
 button {
