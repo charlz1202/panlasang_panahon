@@ -69,7 +69,7 @@
 
 <script>
 export default {
-  name: 'RegistrationPage', // Changed to multi-word name
+  name: 'RegistrationPage',
   data() {
     return {
       fullname: '',

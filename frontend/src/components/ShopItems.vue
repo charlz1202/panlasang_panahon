@@ -170,14 +170,17 @@ export default {
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
 }
-
 .card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.2s ease;
+  height: 100%; /* Ensure the card takes up full height */
 }
 
 .card:hover {
@@ -186,16 +189,15 @@ export default {
 
 .card-content {
   padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .item-image {
   width: 100%;
   height: 150px;
   object-fit: cover;
-}
-
-.cart {
-  margin-top: 30px;
 }
 
 button {
@@ -205,11 +207,15 @@ button {
   padding: 8px 12px;
   cursor: pointer;
   border-radius: 5px;
+  width: fit-content;
+  align-self: center;
+  margin-top: auto; /* This ensures the button stays at the bottom */
 }
 
 button:hover {
   background-color: #0056b3;
 }
+
 
 h2, h3 {
   margin-bottom: 10px;

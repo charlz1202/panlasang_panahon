@@ -18,7 +18,7 @@ import Papa from "papaparse";
 import axios from "axios";
 
 export default {
-  name: 'UploadRestaurant', // Changed to multi-word name
+  name: 'UploadRestaurant',
   data() {
     return {
       file: null,
