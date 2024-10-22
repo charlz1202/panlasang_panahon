@@ -55,8 +55,11 @@
           <label for="postalcode" class="form-label">Postal code</label>
           <input type="text" class="form-control" v-model="postalcode">
         </div>
-        <div class="d-grid gap-2 mb-4">
+        <div class="d-grid gap-2 mb-2">
           <button type="submit" class="btn btn-warning">Register</button>
+          <p class="d-flex justify-content-center">Already have an account?&nbsp;
+            <a href="#" @click="redirectToLogin">Sign in</a>
+          </p>
         </div>
       </form>
 
