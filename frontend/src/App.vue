@@ -62,7 +62,7 @@ export default {
 
 <style>
 body {
-  margin: 10px;
+  margin: 10px !important;
 }
 #app {
   text-align: center;
