@@ -1,6 +1,12 @@
 <template>
-  <div>
+  <div class="shop-page">
     <h2>Shop Items</h2>
+
+    <!-- Cart Icon (Always Visible) -->
+    <div class="cart-icon" :class="{ 'cart-button-active': isCartDrawerOpen }" @click="toggleCartDrawer">
+      <img src="/images/cart.png" alt="Cart" class="cart-image"/>
+      <input type="number" class="cart-count text-center" v-model.number="displayItemCount" disabled/>
+    </div>
 
     <!-- Filter by Category, Weather, and Location -->
     <div class="filters">
@@ -37,7 +43,6 @@
           <p>{{ item.description }}</p>
           <p>Available at <b>{{ item.restaurant.name }}</b></p>
           
-          <!-- Container for price and button at the bottom -->
           <div class="card-bottom">
             <p class="price"><strong>${{ item.price }}</strong></p>
             <button @click="addToCart(item)">Add to Cart</button>
@@ -49,20 +54,32 @@
       <p>No items match your criteria.</p>
     </div>
 
-    <!-- Display Cart -->
-    <div v-if="cart.length > 0" class="cart">
-      <h3>Cart</h3>
-      <ul>
-        <li v-for="(item, index) in cart" :key="index">
-          <p>{{ item.name }} - ${{ item.price }}</p>
-          <button @click="removeFromCart(index)">Remove</button>
-        </li>
-      </ul>
-      <p>Total: ${{ totalCartPrice }}</p>
-      <button @click="placeOrder">Place Order</button>
-    </div>
+    <!-- Cart Drawer -->
+    <transition name="slide">
+      <div v-if="isCartDrawerOpen" class="cart-drawer">
+        <div class="cart-drawer-content">
+          <p><b>Total: ${{ totalCartPrice }}</b></p>
+          <button class="btn btn-primary btn-sm" @click="placeOrder">Go to cart</button>
+          <ul class="cart-items">
+            <li v-for="(item, index) in cart" :key="index" class="cart-item">
+              <div class="cart-item-details">
+                <img :src="getItemImage(item)" alt="Item Image" class="cart-item-image" />
+                <p class="price">${{ item.price }}</p>
+                <div>
+                  <input class="qty" type="number" v-model.number="item.quantity" min="1" @change="updateCartItemQuantity(index)" />
+                  <a href='#' @click="removeFromCart(index)" class="remove-button">
+                    <i class="fas fa-trash-alt"></i> <!-- FontAwesome icon for remove -->
+                  </a>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
+
 
 <script>
 import axios from 'axios';
@@ -70,18 +87,18 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      items: [],              // All items loaded from the backend
-      cart: [],               // Cart items
-      selectedCategory: '',   // Filter category
-      selectedWeather: '',    // Filter weather
-      selectedLocation: '',   // Selected location
-      availableLocations: [], // Available locations
-      userLocation: '',       // Saved location of the logged-in user
-      orderSuccess: false,    // To display success message on order
+      items: [],
+      cart: [],
+      selectedCategory: '',
+      selectedWeather: '',
+      selectedLocation: '',
+      availableLocations: [],
+      userLocation: '',
+      isCartDrawerOpen: false,
+      orderSuccess: false,
     };
   },
   computed: {
-    // Filter items based on selected category, weather, and location
     filteredItems() {
       return this.items.filter(item => {
         const matchesCategory = !this.selectedCategory || item.category === this.selectedCategory;
@@ -91,55 +108,63 @@ export default {
       });
     },
     totalCartPrice() {
-      return this.cart.reduce((total, item) => total + item.price, 0);
+        return this.cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    },
+    totalItemsCount() {
+      return this.cart.reduce((count, item) => count + item.quantity, 0);
+    },
+    displayItemCount() {
+      return this.totalItemsCount === 0 ? '' : this.totalItemsCount;
     }
   },
   methods: {
-    // Fetch items from backend
     async fetchItems() {
       try {
         const response = await axios.get('http://localhost:8080/api/items');
         this.items = response.data;
-
-        // Extract locations from the items
         this.availableLocations = [...new Set(this.items.map(item => item.restaurant.location))];
-
-
-        // If user is logged in, get user location and filter items
         if (localStorage.getItem('user')) {
           const user = JSON.parse(localStorage.getItem('user'));
           if (user && user.location) {
             this.userLocation = user.location;
-            this.selectedLocation = user.location; // Set location based on the user's saved location
+            this.selectedLocation = user.location;
           }
         }
-
       } catch (error) {
         console.error('Error fetching items:', error);
       }
     },
-    // Get the item's image path
     getItemImage(item) {
-      return `/images/${item.filename}`; // Adjust this path based on your server
+      return `/images/${item.filename}`;
     },
-    // Add item to cart
     addToCart(item) {
-      this.cart.push(item);
+      const existingItem = this.cart.find(cartItem => cartItem.id === item.id);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        this.cart.push({ ...item, quantity: 1 });
+      }
+      this.isCartDrawerOpen = true;
     },
-    // Remove item from cart
+    updateCartItemQuantity(index) {
+      if (this.cart[index].quantity <= 0) {
+        this.removeFromCart(index);
+      }
+    },
     removeFromCart(index) {
       this.cart.splice(index, 1);
+      if (this.cart.length === 0) {
+        this.isCartDrawerOpen = false;
+      }
     },
-    // Place an order
+    
     async placeOrder() {
       if (this.cart.length === 0) {
         alert('Cart is empty. Please add items.');
         return;
       }
-
-      // Prepare the order data to send to the backend
       const orderData = {
-        user: { id: 1 }, // Assuming the logged-in user has ID 1 for now
+        user: { id: 1 }, 
         dateTime: new Date().toISOString(),
         weather: this.selectedWeather || 'both',
         items: this.cart.map(item => ({ id: item.id })),
@@ -150,10 +175,16 @@ export default {
         const response = await axios.post('http://localhost:8080/api/orders', orderData);
         console.log('Order placed successfully:', response.data);
         alert('Order placed successfully!');
-        this.cart = []; // Clear the cart after successful order
+        this.cart = [];
+        this.isCartDrawerOpen = false;
       } catch (error) {
         console.error('Error placing order:', error);
         alert('Failed to place the order. Please try again.');
+      }
+    },
+    toggleCartDrawer() {
+      if (this.cart.length > 0) {
+        this.isCartDrawerOpen = !this.isCartDrawerOpen;
       }
     }
   },
@@ -163,8 +194,41 @@ export default {
 };
 </script>
 
-<style scoped>
-/* General container */
+<style>
+.shop-page {
+  position: relative; 
+}
+
+.cart-button {
+  position: fixed; 
+  top: 10px; 
+  right: 10px; 
+  z-index: 10; 
+  background-color: #007bff; 
+  color: white; 
+  border: none; 
+  padding: 8px 12px; 
+  border-radius: 5px; 
+  cursor: pointer; 
+}
+
+.cart-drawer {
+  position: fixed; 
+  top: 0;
+  right: 0; 
+  width: 300px; 
+  height: 100%; 
+  background-color: white; 
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5); 
+  overflow-y: auto; 
+  z-index: 5; 
+  transition: transform 0.3s ease; 
+}
+
+.cart-drawer-content {
+  padding: 20px; 
+}
+
 .filters {
   margin-bottom: 20px;
 }
@@ -174,6 +238,7 @@ export default {
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
 }
+
 .card {
   display: flex;
   flex-direction: column;
@@ -204,12 +269,12 @@ export default {
   object-fit: cover;
 }
 
-/* Flex container for price and button */
+
 .card-bottom {
-  margin-top: auto; /* Push the card-bottom container to the bottom */
+  margin-top: auto; 
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center price and button horizontally */
+  align-items: center; 
 }
 
 .price {
@@ -227,15 +292,93 @@ button {
   border-radius: 5px;
   width: fit-content;
   align-self: center;
-  margin-top: auto; /* This ensures the button stays at the bottom */
 }
 
 button:hover {
   background-color: #0056b3;
 }
 
-
-h2, h3 {
+h2,
+h3 {
   margin-bottom: 10px;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease;
+}
+.slide-enter,
+.slide-leave-to {
+  transform: translateX(100%); 
+}
+
+.cart-button-active {
+  transform: translateX(-300px); 
+}
+
+.cart-items {
+  list-style: none;
+  padding: 0;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center; 
+  border-bottom: 1px solid #ddd; 
+  padding: 10px 0; 
+}
+
+.cart-item-image {
+  width: 200px; 
+  height: 150px; 
+  object-fit: cover; 
+}
+
+.cart-item-details {
+  flex-grow: 1; 
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; 
+  flex-direction: column;
+}
+
+.remove-button {
+  background: none; 
+  border: none; 
+  color: #ff0000; 
+  cursor: pointer; 
+}
+
+
+input[type="number"].qty {
+  width: 40px; 
+  margin-right: 10px; 
+  text-align: center;
+}
+
+.cart-icon {
+  position: fixed; 
+  top: 10px; 
+  right: 10px; 
+  z-index: 10; 
+  cursor: pointer; 
+}
+
+.cart-count {
+  font-size: 18px;
+  position: absolute;
+  top: 8px;
+  left: 13px;
+  transform: translate(0%, -50%);
+  width: 40px;
+  border: none 0px;
+  background: transparent;
+  font-weight: bold;
+  color: orange;
+}
+
+.cart-image {
+  width: 50px; 
+  height: auto; 
 }
 </style>
