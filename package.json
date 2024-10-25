@@ -1,0 +1,23 @@
+{
+  "name": "project1",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "project1": "file:",
+    "vue": "^3.2.0",
+    "vue-router": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@vue/cli-plugin-babel": "^5.0.0",
+    "@vue/cli-service": "^5.0.0",
+    "babel-loader": "^8.0.0",
+    "cache-loader": "^4.1.0",
+    "eslint": "^7.0.0"
+  }
+}
