@@ -33,7 +33,7 @@
           <input type="text" class="form-control" v-model="city">
         </div>
         <div class="col-md-4">
-          <label for="province" class="form-label">State</label>
+          <label for="province" class="form-label">Province</label>
           <select v-model="province" class="form-select">
             <option value="" selected disabled>Select</option>
             <option value="Alberta">Alberta</option>

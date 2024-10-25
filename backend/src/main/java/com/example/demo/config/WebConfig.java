@@ -9,8 +9,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:8081")  // Vue.js front-end
-                .allowedMethods("GET", "POST")
-                .allowCredentials(true);
+        		// .allowedOrigins("http://localhost:8081")  // Vue.js front-end
+        		// .allowCredentials(true) // to enable checking of cross origin
+                .allowedMethods("GET", "POST");
     }
 }
