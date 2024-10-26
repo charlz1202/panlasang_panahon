@@ -35,6 +35,16 @@ public class Restaurant {
     @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Phone number is invalid")
     private String phone;
 
+    // Parameterized Constructor
+    public Restaurant(String name, String address, String city, String province, String postalcode, String phone) {
+        this.name = name;
+        this.address = address;
+        this.city = city;
+        this.province = province;
+        this.postalcode = postalcode;
+        this.phone = phone;
+    }
+
     // Getters and setters
 
     public Long getId() {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Upload Restaurant</h2>
+    <h2>Upload Restaurants</h2>
     <input type="file" @change="handleFileUpload" accept=".csv" />
     <button @click="uploadCSV">Upload CSV</button>
 
@@ -14,16 +14,15 @@
 </template>
 
 <script>
-import Papa from "papaparse";
-import axios from "axios";
+import axios from "axios"; // Ensure axios is installed
 
 export default {
-  name: 'UploadRestaurant',
+  name: "UploadRestaurant",
   data() {
     return {
       file: null,
       successMessage: "",
-      errorMessage: ""
+      errorMessage: "",
     };
   },
   methods: {
@@ -31,47 +30,32 @@ export default {
       const file = event.target.files[0];
       if (file && file.type === "text/csv") {
         this.file = file;
+        this.errorMessage = ""; // Clear any previous error message
       } else {
         this.errorMessage = "Please upload a valid CSV file.";
         this.file = null;
       }
     },
+
     async uploadCSV() {
       if (!this.file) {
         this.errorMessage = "No file selected.";
         return;
       }
 
+      const formData = new FormData();
+      formData.append("file", this.file);
+
       try {
-        // Parse the CSV file using papaparse
-        Papa.parse(this.file, {
-          complete: async (result) => {
-             // Remove the first row (header)
-            const dataWithoutHeader = result.data.slice(1); // Skip the first row
-            const restaurants = dataWithoutHeader.map(row => ({
-              id: row[0],
-              name: row[1],
-              address: row[2],
-              city: row[3],
-              province: row[4],
-              postalcode: row[5],
-              phone: row[6]
-            }));
-
-            // Send the parsed data to the Spring Boot backend
-            await axios.post("http://localhost:8080/api/restaurants/upload", restaurants, {
-              headers: {
-                "Content-Type": "application/json"
-              }
-            });
-
-            this.successMessage = "Restaurants uploaded successfully!";
-            this.errorMessage = "";
-          },
-          header: false
-        });
+        await axios.post(
+          "http://localhost:8080/api/restaurants/upload", // Ensure this matches your backend endpoint
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        this.successMessage = "Restaurants uploaded successfully!";
+        this.errorMessage = "";
       } catch (error) {
-        this.errorMessage = "Failed to upload CSV: " + error.message;
+        this.errorMessage = "Failed to upload restaurants: " + error.message;
       }
     }
   }

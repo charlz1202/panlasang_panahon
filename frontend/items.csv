@@ -1,6 +1,6 @@
 id,name,description,price,category,weather,restaurant,filename
-1,Inasal na Manok,Filipino Grilled Chicken,17.5,MAIN_DISH,HOT,1,SunnyPampangaInasal.jpg
-2,Halo-Halo,Filipino mixed dessert,12.99,DESSERT,HOT,1,SunnyPampangaHalohalo.jpg
-3,Lechon Kawali,Fried Pork Belly,15,MAIN_DISH,HOT,1,SunnyPampangaLechonKawali.jpg
+1,Inasal na Manok,Filipino Grilled Chicken,17.5,MAIN_DISH,HOT,1,SunnyPampangaInasal.png
+2,Halo-Halo,Filipino mixed dessert,12.99,DESSERT,HOT,1,SunnyPampangaHalohalo.png
+3,Lechon Kawali,Fried Pork Belly,15,MAIN_DISH,HOT,1,SunnyPampangaLechonKawali.png
 4,Sisig,Sizzling Sisig (Filipino Crispy Pork with Eggs),20,MAIN_DISH,HOT,1,SunnyPampangaSisig.jpg
-5,Adobo,Filipino soy-vinegar stew,12.5,MAIN_DISH,HOT,1,SunnyPampangaAdobo.jpg
+5,Adobo,Filipino soy-vinegar stew,12.5,MAIN_DISH,HOT,1,SunnyPampangaAdobo.png
