@@ -1,8 +1,10 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 @Entity
 @Table(name = "orders")
@@ -22,16 +24,15 @@ public class Order {
     @Column(columnDefinition = "VARCHAR(255) CHECK (weather IN ('COLD', 'HOT'))")
     private Weather weather; // Weather (cold, hot)
 
-    @ManyToMany
-    @JoinTable(
-        name = "order_items",
-        joinColumns = @JoinColumn(name = "order_id"),
-        inverseJoinColumns = @JoinColumn(name = "item_id")
-    )
-    private List<Item> items; // Relation with Item table
-
+    @ManyToOne
+    private Item item; // Relation with Item table
+    
+    @NotNull
+    private Long quantity;
+    
     private Double price; // Total price of the order
 
+    
     // Getters and Setters
     public Long getId() {
         return id;
@@ -65,15 +66,24 @@ public class Order {
         this.weather = weather;
     }
 
-    public List<Item> getItems() {
-        return items;
-    }
 
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
+    public Item getItem() {
+		return item;
+	}
 
-    public Double getPrice() {
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
+	public Long getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Long quantity) {
+		this.quantity = quantity;
+	}
+
+	public Double getPrice() {
         return price;
     }
 

@@ -5,7 +5,8 @@
     <!-- Cart Icon (Always Visible) -->
     <div class="cart-icon" :class="{ 'cart-button-active': isCartDrawerOpen }" @click="toggleCartDrawer">
       <img src="/images/cart.png" alt="Cart" class="cart-image"/>
-      <input type="number" class="cart-count text-center" v-model.number="displayItemCount" disabled/>
+      <span class="cart-count text-center" @click.stop="toggleCartDrawer">{{ displayItemCount }}</span>
+      <!--nput type="number" class="cart-count text-center" v-model.number="displayItemCount" disabled/-->
     </div>
 
     <!-- Filter by Category, Weather, and Location -->
@@ -58,6 +59,7 @@
     <transition name="slide">
       <div v-if="isCartDrawerOpen" class="cart-drawer">
         <div class="cart-drawer-content">
+          <button type="button" class="btn-close" @click="closeCartDrawer"></button>
           <p><b>Total: ${{ totalCartPrice }}</b></p>
           <button class="btn btn-primary btn-sm" @click="placeOrder">Go to cart</button>
           <ul class="cart-items">
@@ -127,7 +129,9 @@ export default {
           const user = JSON.parse(localStorage.getItem('user'));
           if (user && user.location) {
             this.userLocation = user.location;
-            this.selectedLocation = user.location;
+            if (this.availableLocations.includes(this.userLocation)) {
+              this.selectedLocation = user.location;
+            }
           }
         }
       } catch (error) {
@@ -183,9 +187,13 @@ export default {
       }
     },
     toggleCartDrawer() {
-      if (this.cart.length > 0) {
-        this.isCartDrawerOpen = !this.isCartDrawerOpen;
-      }
+      //if (this.cart.length > 0) {
+      //  this.isCartDrawerOpen = !this.isCartDrawerOpen;
+      //}
+      this.$router.push('/'); 
+    },
+    closeCartDrawer() {
+      this.isCartDrawerOpen = false;
     }
   },
   mounted() {
@@ -368,17 +376,29 @@ input[type="number"].qty {
   font-size: 18px;
   position: absolute;
   top: 8px;
-  left: 13px;
+  left: 6px;
   transform: translate(0%, -50%);
   width: 40px;
   border: none 0px;
-  background: transparent;
   font-weight: bold;
   color: orange;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .cart-image {
   width: 50px; 
   height: auto; 
+}
+
+
+.btn-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+} 
+
+.btn-close {
+  background-color: transparent !important;
 }
 </style>
