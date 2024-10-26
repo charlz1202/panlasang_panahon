@@ -28,9 +28,11 @@ export default {
   methods: {
     handleFileUpload(event) {
       const file = event.target.files[0];
-      if (file && file.type === "text/csv") {
+      // Check file extension instead of MIME type
+      if (file && file.name.endsWith(".csv")) {
         this.file = file;
-        this.errorMessage = ""; // Clear any previous error message
+        this.successMessage = ""; // Clear previous success message
+        this.errorMessage = ""; // Clear previous error message
       } else {
         this.errorMessage = "Please upload a valid CSV file.";
         this.file = null;
@@ -55,7 +57,9 @@ export default {
         this.successMessage = "Restaurants uploaded successfully!";
         this.errorMessage = "";
       } catch (error) {
-        this.errorMessage = "Failed to upload restaurants: " + error.message;
+        // Log full error for debugging
+        console.error("Error uploading restaurants:", error);
+        this.errorMessage = "Failed to upload restaurants: " + (error.response?.data || error.message);
       }
     }
   }

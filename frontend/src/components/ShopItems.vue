@@ -104,7 +104,7 @@ export default {
       return this.items.filter(item => {
         const matchesCategory = !this.selectedCategory || item.category === this.selectedCategory;
         const matchesWeather = !this.selectedWeather || item.weather === this.selectedWeather || item.weather === "BOTH";
-        const matchesLocation = !this.selectedLocation || item.restaurant.location === this.selectedLocation;
+        const matchesLocation = !this.selectedLocation || item.restaurant.city === this.selectedLocation;
         return matchesCategory && matchesWeather && matchesLocation;
       });
     },

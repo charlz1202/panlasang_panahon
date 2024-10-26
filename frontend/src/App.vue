@@ -2,7 +2,6 @@
   <div id="app">
     <nav v-if="showNavBar">
       <router-link to="/shop">Shop Items</router-link> | 
-      <router-link to="/upload/restaurant">Upload Restaurant</router-link> |
       <!-- Conditionally render Login/Logout based on user's login status -->
       <router-link v-if="!isLoggedIn" to="/login">
         <a href="#">Login</a>

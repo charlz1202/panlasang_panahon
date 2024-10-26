@@ -4,3 +4,18 @@ id,name,description,price,category,weather,restaurant,filename
 3,Lechon Kawali,Fried Pork Belly,15,MAIN_DISH,HOT,1,SunnyPampangaLechonKawali.png
 4,Sisig,Sizzling Sisig (Filipino Crispy Pork with Eggs),20,MAIN_DISH,HOT,1,SunnyPampangaSisig.jpg
 5,Adobo,Filipino soy-vinegar stew,12.5,MAIN_DISH,HOT,1,SunnyPampangaAdobo.png
+6,Isaw,Filipino grilled pork intestines,7.5,MAIN_DISH,HOT,2,SunnyKimIsaw.jpg
+7,Pork Hamunado,Filipino sweet braised pork,24.95,MAIN_DISH,HOT,2,SunnyKimHamunado.jpg
+8,Pork Humba,Savory caramelized pork,19.5,MAIN_DISH,HOT,2,SunnyKimPorkHumba.jpg
+9,Liempo,Filipino grilled pork belly,15.5,MAIN_DISH,HOT,2,SunnyKimLiempo.jpg
+10,Sagot' Gulaman,Sweet Refreshing Filipino Drinks,5.5,DRINK,HOT,2,SunnyKimGulaman.jpg
+11,Inihaw na Bangus,Grilled Milk Fish,16.95,MAIN_DISH,HOT,3,SunnyPlatoBangus.jpg
+12,Pork BBQ,Grilled Pork,12.5,MAIN_DISH,HOT,3,SunnyPlatoBBQ.jpg
+13,Buko Pandan,Creamy coconut,7.5,DESSERT,HOT,3,SunnyPlatoBukoPandan.jpg
+14,Saging con Yelo,Sweet Banana,7.5,DESSERT,HOT,3,SunnyPlatoConYelo.jpg
+15,Pork Sisig,Crispy Pork Sizzle,20.95,MAIN_DISH,HOT,3,SunnyPlatoSisig.png
+16,Bulalo,Beef Marrow Stew,8.95,MAIN_DISH,RAINY,1,RainyPampangaBulalo.png
+17,Sinigang na Baboy,Pork Sour Soup,8.95,MAIN_DISH,RAINY,1,RainyPampangaSinigang.png
+18,Kare-Kare,Pork Peanut Stew,9.55,MAIN_DISH,RAINY,1,RainyPampangaKareKare.png
+19,Ginataang Bilo Bilo,Coconut Sticky Rice Balls,4.55,DESSERT,RAINY,1,RainyPampangaBiloBilo.png
+20,Papaitan,Bitter Stew,8.55,MAIN_DISH,RAINY,1,RainyPampangaPapaitan.png

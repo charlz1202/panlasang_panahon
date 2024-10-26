@@ -1,14 +1,17 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
+import com.example.demo.deserializer.CategoryDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
-import com.example.demo.deserializer.CategoryDeserializer;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Entity
 @Table(name = "items")
@@ -35,7 +38,7 @@ public class Item {
 
     // Choices for Weather
     public enum Weather {
-        COLD, HOT, BOTH
+        COLD, HOT, RAINY
     }
 
     private Weather weather;

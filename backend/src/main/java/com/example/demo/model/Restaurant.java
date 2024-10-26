@@ -6,7 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "restaurants")
@@ -31,9 +30,12 @@ public class Restaurant {
     @NotBlank(message = "Postal code is mandatory")
     private String postalcode;
     
-    @NotBlank(message = "Phone number is mandatory")
-    @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Phone number is invalid")
+    // Phone number is now just a simple string without validation
     private String phone;
+
+    // No-argument constructor for JPA
+    public Restaurant() {
+    }
 
     // Parameterized Constructor
     public Restaurant(String name, String address, String city, String province, String postalcode, String phone) {
@@ -64,36 +66,36 @@ public class Restaurant {
     }    
 
     public String getAddress() {
-		return address;
-	}
+        return address;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public String getCity() {
-		return city;
-	}
+    public String getCity() {
+        return city;
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-	public String getProvince() {
-		return province;
-	}
+    public String getProvince() {
+        return province;
+    }
 
-	public void setProvince(String province) {
-		this.province = province;
-	}
+    public void setProvince(String province) {
+        this.province = province;
+    }
 
-	public String getPostalcode() {
-		return postalcode;
-	}
+    public String getPostalcode() {
+        return postalcode;
+    }
 
-	public void setPostalcode(String postalcode) {
-		this.postalcode = postalcode;
-	}
+    public void setPostalcode(String postalcode) {
+        this.postalcode = postalcode;
+    }
 
     public String getPhone() {
         return phone;
@@ -102,12 +104,8 @@ public class Restaurant {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-    
-    public String getLocation() {
-        return city;
-    }
-    
+       
     public String getFullAddress() {
-    	return address + ", " + city + ", " + province + ", " + postalcode;
+        return address + ", " + city + ", " + province + ", " + postalcode;
     }
 }

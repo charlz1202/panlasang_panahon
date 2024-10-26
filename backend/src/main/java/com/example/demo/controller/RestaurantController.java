@@ -2,12 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Restaurant;
 import com.example.demo.service.RestaurantService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.validation.Valid;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/restaurants")
 public class RestaurantController {
+
+    private static final Logger logger = LoggerFactory.getLogger(RestaurantController.class);
 
     @Autowired
     private RestaurantService restaurantService;
@@ -39,7 +42,7 @@ public class RestaurantController {
             response.put("name", restaurant.getName());
             response.put("address", restaurant.getFullAddress());
             response.put("phone", restaurant.getPhone());
-            response.put("location", restaurant.getLocation());
+            response.put("location", restaurant.getCity());
             return ResponseEntity.ok().body(response);
         } else {
             return ResponseEntity.notFound().build();
@@ -62,11 +65,11 @@ public class RestaurantController {
 
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-            
+
                 if (data.length < 7) {
                     return ResponseEntity.badRequest().body("CSV file is missing required columns.");
                 }
-            
+
                 // Create the restaurant object using the correct indices
                 Restaurant restaurant = new Restaurant(
                     data[1].trim(), // Name
@@ -76,13 +79,14 @@ public class RestaurantController {
                     data[5].trim(), // Postal Code
                     data[6].trim()  // Phone
                 );
-            
+
                 restaurantList.add(restaurant);
             }
 
             restaurantService.saveRestaurants(restaurantList);
             return ResponseEntity.ok("Restaurants uploaded successfully!");
         } catch (Exception e) {
+            logger.error("Error uploading restaurants: ", e);
             return ResponseEntity.status(500).body("Failed to upload restaurants: " + e.getMessage());
         }
     }
