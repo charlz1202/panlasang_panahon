@@ -1,5 +1,6 @@
 id,name,description,price,category,weather,restaurant,filename
-1,Beef Bulalo,Savory Beef,17.5,MAIN_DISH,COLD,1,img1.jpg
-2,Cheesecake,Classic cheesecake dessert,5,DESSERT,BOTH,1,img2.jpg
-3,Lemonade,Freshly squeezed lemonade,3.5,DRINK,HOT,2,img3.jpg
-4,Green Tea,Freshly brewed tea,3.5,DRINK,COLD,2,img4.jpg
+1,Inasal na Manok,Filipino Grilled Chicken,17.5,MAIN_DISH,HOT,1,SunnyPampangaInasal.jpg
+2,Halo-Halo,Filipino mixed dessert,12.99,DESSERT,HOT,1,SunnyPampangaHalohalo.jpg
+3,Lechon Kawali,Fried Pork Belly,15,MAIN_DISH,HOT,1,SunnyPampangaLechonKawali.jpg
+4,Sisig,Sizzling Sisig (Filipino Crispy Pork with Eggs),20,MAIN_DISH,HOT,1,SunnyPampangaSisig.jpg
+5,Adobo,Filipino soy-vinegar stew,12.5,MAIN_DISH,HOT,1,SunnyPampangaAdobo.jpg

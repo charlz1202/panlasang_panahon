@@ -1,16 +1,25 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Item;
-import com.example.demo.service.ItemService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.model.Item;
+import com.example.demo.service.ItemService;
+
 @RestController
 @RequestMapping("/api/items")
+@CrossOrigin(origins = "http://localhost:8081")
 public class ItemController {
 
     @Autowired
@@ -35,13 +44,7 @@ public class ItemController {
         return itemService.getItemsByRestaurant(restaurantId);
     }
 
-    /*/ Create a new item
-    @PostMapping
-    public ResponseEntity<Item> createItem(@RequestBody Item item) {
-        Item savedItem = itemService.saveItem(item);
-        return ResponseEntity.ok(savedItem);
-    }*/
-    
+    // Create a new item
     @PostMapping("/save")
     public ResponseEntity<Item> saveItem(@RequestBody Item item) {
         try {
@@ -52,7 +55,8 @@ public class ItemController {
         }
     }
     
-    @PostMapping("/upload")
+    // Bulk upload items
+    @PostMapping("/bulk-upload")
     public ResponseEntity<List<Item>> uploadItems(@RequestBody List<Item> items) {
         try {
             List<Item> savedItems = itemService.saveItems(items);
@@ -62,29 +66,9 @@ public class ItemController {
         }
     }
     
-    /*
-    // Endpoint for bulk uploading items
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadItems(@RequestBody List<Item> items) {
-        try {
-        	for (Item item : items) {
-                if (item.getRestaurant() != null) {
-                    System.out.println("Uploading item for restaurant: " + item.getRestaurant().getId());
-                } else {
-                    System.out.println("No restaurant for item: " + item.getName());
-                }
-            }
-        	
-            itemService.saveItems(items);
-            return ResponseEntity.ok("Items uploaded successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error uploading items: " + e.getMessage());
-        }
-    }*/
-    
-    // Endpoint to delete all restaurants from HAL
+    // Endpoint to delete all items
     @DeleteMapping
-    public ResponseEntity<String> deleteAllRestaurants() {
+    public ResponseEntity<String> deleteAllItems() {
         itemService.deleteAllItems();
         return ResponseEntity.ok("All items deleted successfully.");
     }

@@ -21,8 +21,9 @@
       <label for="weather">Weather:</label>
       <select v-model="selectedWeather">
         <option value="">All</option>
-        <option value="HOT">Hot</option>
+        <option value="HOT">Summer</option>
         <option value="COLD">Cold</option>
+        <option value="RAINY">Rainy</option>
       </select>
 
       <label for="location">Location:</label>
