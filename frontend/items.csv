@@ -1,10 +1,10 @@
 id,name,description,price,category,weather,restaurant,filename
 1,Inasal na Manok,Filipino Grilled Chicken,17.5,MAIN_DISH,HOT,1,SunnyPampangaInasal.png
 2,Halo-Halo,Filipino mixed dessert,12.99,DESSERT,HOT,1,SunnyPampangaHalohalo.png
-3,Lechon Kawali,Fried Pork Belly,15,MAIN_DISH,HOT,1,SunnyPampangaLechonKawali.png
-4,Sisig,Sizzling Sisig (Filipino Crispy Pork with Eggs),20,MAIN_DISH,HOT,1,SunnyPampangaSisig.jpg
-5,Adobo,Filipino soy-vinegar stew,12.5,MAIN_DISH,HOT,1,SunnyPampangaAdobo.png
-6,Isaw,Filipino grilled pork intestines,7.5,MAIN_DISH,HOT,2,SunnyKimIsaw.jpg
+3,Lechon Kawali,Fried Pork Belly,15.50,MAIN_DISH,HOT,1,SunnyPampangaLechonKawali.png
+4,Sisig,Sizzling Sisig (Filipino Crispy Pork with Eggs),20.95,MAIN_DISH,HOT,1,SunnyPampangaSisig.jpg
+5,Adobo,Filipino soy-vinegar stew,13.55,MAIN_DISH,HOT,1,SunnyPampangaAdobo.png
+6,Isaw,Filipino grilled pork intestines,10.50,MAIN_DISH,HOT,2,SunnyKimIsaw.jpg
 7,Pork Hamunado,Filipino sweet braised pork,24.95,MAIN_DISH,HOT,2,SunnyKimHamunado.jpg
 8,Pork Humba,Savory caramelized pork,19.5,MAIN_DISH,HOT,2,SunnyKimPorkHumba.jpg
 9,Liempo,Filipino grilled pork belly,15.5,MAIN_DISH,HOT,2,SunnyKimLiempo.jpg
@@ -14,8 +14,28 @@ id,name,description,price,category,weather,restaurant,filename
 13,Buko Pandan,Creamy coconut,7.5,DESSERT,HOT,3,SunnyPlatoBukoPandan.jpg
 14,Saging con Yelo,Sweet Banana,7.5,DESSERT,HOT,3,SunnyPlatoConYelo.jpg
 15,Pork Sisig,Crispy Pork Sizzle,20.95,MAIN_DISH,HOT,3,SunnyPlatoSisig.png
-16,Bulalo,Beef Marrow Stew,8.95,MAIN_DISH,RAINY,1,RainyPampangaBulalo.png
-17,Sinigang na Baboy,Pork Sour Soup,8.95,MAIN_DISH,RAINY,1,RainyPampangaSinigang.png
-18,Kare-Kare,Pork Peanut Stew,9.55,MAIN_DISH,RAINY,1,RainyPampangaKareKare.png
-19,Ginataang Bilo Bilo,Coconut Sticky Rice Balls,4.55,DESSERT,RAINY,1,RainyPampangaBiloBilo.png
-20,Papaitan,Bitter Stew,8.55,MAIN_DISH,RAINY,1,RainyPampangaPapaitan.png
+16,Bulalo,Beef Marrow Stew,16.95,MAIN_DISH,RAINY,1,RainyPampangaBulalo.png
+17,Sinigang na Baboy,Pork Sour Soup,12.95,MAIN_DISH,RAINY,1,RainyPampangaSinigang.png
+18,Kare-Kare,Pork Peanut Stew,15.55,MAIN_DISH,RAINY,1,RainyPampangaKareKare.png
+19,Ginataang Bilo Bilo,Coconut Sticky Rice Balls,6.55,DESSERT,RAINY,1,RainyPampangaBiloBilo.png
+20,Papaitan,Bitter Stew,15.55,MAIN_DISH,RAINY,2,RainyPampangaPapaitan.png
+21,Bulalo,Filipino Soup,18.99,MAIN_DISH,RAINY,2,RainyKimBulalo.png
+22,Sinigang na baboy,Sour soup cooked with pork,17.55,MAIN_DISH,RAINY,2,RainyKimSinigang.png
+23,Kare-Kare,Crispy Kare-Kare with Rice,18.99,MAIN_DISH,RAINY,2,RainyKimKareKare.png
+24,Ginataan Bilo-Bilo,Rice Balls & Sweet Potato & Coconut Dessert,10.55,DESSERT,RAINY,2,RainyKimGinataan.png
+25,Papaitan,Bitter Stew,12.55,MAIN_DISH,RAINY,2,RainyKimPapaitan.jpg
+26,Bulalo,Filipino Soup,23.00,MAIN_DISH,RAINY,2,RainyPlatoBulalo.png
+27,Sinigang na baboy,Sour soup cooked with pork,22.95,MAIN_DISH,RAINY,2,RainyPlatoSinigang.png
+28,Kare-Kare,Crispy Kare-Kare with Rice,28.99,MAIN_DISH,RAINY,2,RainyPlatoKareKare.png
+29,Ginataan Bilo-Bilo,Rice Balls & Sweet Potato & Coconut Dessert,12.55,DESSERT,RAINY,2,RainyPlatoGinataan.png
+30,Papaitan,Bitter Stew,19.55,MAIN_DISH,RAINY,2,RainyPlatoPapaitan.jpg
+31,Arroz Caldo,Chicken Rice Porridge,15.00,MAIN_DISH,COLD,1,ColdPampangaArrozCaldo.png
+32,Batchoy,Filipino noodle soup of pork offal,15.95,MAIN_DISH,COLD,1,ColdPampangaBatchoy.png
+33,Lomi,Filipino dish of thick egg noodles,16.95,MAIN_DISH,COLD,1,ColdPampangaLomi.png
+34,Tinolang Manok,Filipino chicken stew,13.55,MAIN_DISH,COLD,1,ColdPampangaTinolangManok.png
+35,Tsokolate,Hot Chocolate,10.55,DRINK,COLD,1,ColdPampangaTsokolate.png
+36,Arroz Caldo,Chicken Rice Porridge,14.00,MAIN_DISH,COLD,2,ColdKimArrozCaldo.png
+37,Batchoy,Filipino noodle soup of pork offal,12.95,MAIN_DISH,COLD,2,ColdKimBatchoy.png
+38,Lomi,Filipino dish of thick egg noodles,14.95,MAIN_DISH,COLD,2,ColdKimLomi.png
+39,Tinolang Manok,Filipino chicken stew,12.55,MAIN_DISH,COLD,2,ColdKimTinolangManok.png
+40,Tsokolate,Hot Chocolate,8.55,DRINK,COLD,2,ColdKimTsokolate.png
