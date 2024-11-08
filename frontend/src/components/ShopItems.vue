@@ -81,7 +81,6 @@
   </div>
 </template>
 
-
 <script>
 import axios from 'axios';
 
@@ -118,6 +117,7 @@ export default {
       return this.totalItemsCount === 0 ? '' : this.totalItemsCount;
     }
   },
+  
   methods: {
     async fetchItems() {
       try {
@@ -133,6 +133,31 @@ export default {
         }
       } catch (error) {
         console.error('Error fetching items:', error);
+      }
+    },
+
+    async placeOrder() {
+      if (this.cart.length === 0) {
+        alert('Cart is empty. Please add items.');
+        return;
+      }
+      const orderData = {
+        user: { id: 1 }, 
+        dateTime: new Date().toISOString(),
+        weather: this.selectedWeather || 'both',
+        items: this.cart.map(item => ({ id: item.id })), 
+        price: this.totalCartPrice
+      };
+
+      try {
+        const response = await axios.post('http://localhost:8080/api/orders', orderData);
+        console.log('Order placed successfully:', response.data);
+        alert('Order placed successfully!');
+        this.cart = [];
+        this.isCartDrawerOpen = false;
+      } catch (error) {
+        console.error('Error placing order:', error);
+        alert('Failed to place the order. Please try again.');
       }
     },
     getItemImage(item) {
@@ -159,30 +184,6 @@ export default {
       }
     },
     
-    async placeOrder() {
-      if (this.cart.length === 0) {
-        alert('Cart is empty. Please add items.');
-        return;
-      }
-      const orderData = {
-        user: { id: 1 }, 
-        dateTime: new Date().toISOString(),
-        weather: this.selectedWeather || 'both',
-        items: this.cart.map(item => ({ id: item.id })),
-        price: this.totalCartPrice
-      };
-
-      try {
-        const response = await axios.post('http://localhost:8080/api/orders', orderData);
-        console.log('Order placed successfully:', response.data);
-        alert('Order placed successfully!');
-        this.cart = [];
-        this.isCartDrawerOpen = false;
-      } catch (error) {
-        console.error('Error placing order:', error);
-        alert('Failed to place the order. Please try again.');
-      }
-    },
     toggleCartDrawer() {
       if (this.cart.length > 0) {
         this.isCartDrawerOpen = !this.isCartDrawerOpen;
@@ -279,107 +280,80 @@ export default {
 }
 
 .price {
-  margin-bottom: 10px;
-  font-size: 1.2em;
-  color: #333;
-}
-
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 5px;
-  width: fit-content;
-  align-self: center;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-h2,
-h3 {
-  margin-bottom: 10px;
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.3s ease;
-}
-.slide-enter,
-.slide-leave-to {
-  transform: translateX(100%); 
-}
-
-.cart-button-active {
-  transform: translateX(-300px); 
-}
-
-.cart-items {
-  list-style: none;
-  padding: 0;
+  font-weight: bold;
 }
 
 .cart-item {
   display: flex;
-  align-items: center; 
-  border-bottom: 1px solid #ddd; 
-  padding: 10px 0; 
-}
-
-.cart-item-image {
-  width: 200px; 
-  height: 150px; 
-  object-fit: cover; 
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 .cart-item-details {
-  flex-grow: 1; 
   display: flex;
-  justify-content: space-between; 
-  align-items: center; 
-  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.cart-item-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.qty {
+  width: 50px;
 }
 
 .remove-button {
-  background: none; 
-  border: none; 
-  color: #ff0000; 
-  cursor: pointer; 
+  color: #ff4d4d;
+  cursor: pointer;
 }
 
-
-input[type="number"].qty {
-  width: 40px; 
-  margin-right: 10px; 
-  text-align: center;
+.cart-items {
+  list-style: none;
+  padding-left: 0;
 }
 
 .cart-icon {
-  position: fixed; 
-  top: 10px; 
-  right: 10px; 
-  z-index: 10; 
-  cursor: pointer; 
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px; /* Reduced padding to avoid large icon */
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px; /* Set a fixed width */
+  height: 50px; /* Set a fixed height */
+}
+
+.cart-icon img {
+  width: 25px; /* Control the size of the cart icon image */
+  height: 25px;
 }
 
 .cart-count {
-  font-size: 18px;
   position: absolute;
-  top: 8px;
-  left: 13px;
-  transform: translate(0%, -50%);
-  width: 40px;
-  border: none 0px;
-  background: transparent;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  font-size: 12px; /* Make the count smaller */
+  padding: 2px 5px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 18px;
+  height: 18px;
   font-weight: bold;
-  color: orange;
 }
 
-.cart-image {
-  width: 50px; 
-  height: auto; 
-}
+
 </style>

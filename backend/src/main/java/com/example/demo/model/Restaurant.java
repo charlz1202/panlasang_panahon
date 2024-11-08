@@ -77,6 +77,10 @@ public class Restaurant {
         return city;
     }
 
+    public String getLocation() {
+        return city;
+    }
+
     public void setCity(String city) {
         this.city = city;
     }

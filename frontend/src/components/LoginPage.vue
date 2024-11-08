@@ -1,5 +1,5 @@
 <template>
-  <div class="container d-flex flex-column min-vh-100 justify-content-center align-items-center " style="max-width: 600px">
+  <div class="container d-flex flex-column min-vh-100 justify-content-center align-items-center" style="max-width: 600px">
     <h2 class="mb-3">Panlasang Panahon</h2>
     <div class="row" style="max-width: 300px">
       <form class="form-login" @submit.prevent="loginUser">
@@ -7,7 +7,8 @@
         <input class="form-control" type="password" v-model="password" placeholder="Password" required />
         <button class="btn btn-primary w-100 mt-2" type="submit">Login</button>
       </form>
-      <p>Don't have an account? <a href="#" @click="redirectToRegistration">Register here</a></p>
+      <p class="mt-3">Don't have an account? <a href="#" @click="redirectToRegistration">Register here</a></p>
+      <p v-if="loginError" class="text-danger">{{ loginError }}</p> <!-- Error message for invalid login -->
     </div>
   </div>
 </template>
@@ -15,10 +16,21 @@
 <script>
 export default {
   name: 'LoginPage',
+
+   beforeRouteEnter(to, from, next) {
+    // Check if the user is already logged in
+    if (localStorage.getItem('user')) {
+      next('/shop'); // Redirect to shop if the user is already logged in
+    } else {
+      next(); // Proceed normally to login page
+    }
+  },
+  
   data() {
     return {
       email: '',
       password: '',
+      loginError: '',  // Error message variable
     };
   },
   methods: {
@@ -48,13 +60,16 @@ export default {
 
           localStorage.setItem('user', JSON.stringify(user));  // Store user data
           this.$emit('login');
-          this.$router.push('/shop');  // Redirect to shop page after login
+          console.log('Login successful, redirecting...');
+          const redirectTo = this.$route.query.redirect || '/shop'; // Check if there is a redirect query param
+          console.log(`Redirecting to: ${redirectTo}`);
+          this.$router.push(redirectTo);  // Redirect to the appropriate page
         } else {
-          alert(data.message || 'Invalid credentials');
+          this.loginError = data.message || 'Invalid credentials'; // Display error message on the page
         }
       } catch (error) {
         console.error('Error during login:', error);
-        alert('Failed to login. Please check the console for details.');
+        this.loginError = 'Failed to login. Please check the console for details.';
       }
     },
 
@@ -65,6 +80,11 @@ export default {
 };
 </script>
 
-<style>
-  .form-login input:focus {z-index: 1;}.form-login .form-control {position: relative;}
+<style scoped>
+.form-login input:focus {
+  z-index: 1;
+}
+.form-login .form-control {
+  position: relative;
+}
 </style>

@@ -4,7 +4,10 @@
       <img src="@/assets/logo.jpg" alt="Panlasang Panahon Logo" class="logo" />
       <h1>Welcome to Panlasang Panahon</h1>
       <p>Your ultimate guide to weather-based meal suggestions.</p>
-      <button class="cta-button" @click="navigateToShop">Explore Menus</button>
+      <div class="button-group">
+        <button class="cta-button" @click="navigateToLogin">Login to Explore More</button>
+        <button class="guest-button" @click="navigateToShop">Explore as Guest</button>
+      </div>
     </header>
   </div>
 </template>
@@ -13,8 +16,11 @@
 export default {
   name: 'HomePage',
   methods: {
+    navigateToLogin() {
+      this.$router.push('/login'); // Direct to LoginPage.vue
+    },
     navigateToShop() {
-      this.$router.push('/shop'); // Change this line to redirect to Shop Items
+      this.$router.push('/shop'); // Direct to ShopItems.vue for non-registered users
     }
   }
 };
@@ -22,47 +28,65 @@ export default {
 
 <style scoped>
 .landing-page {
-  text-align: center;
   font-family: 'Arial', sans-serif;
   color: #333;
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Vertically center content */
   margin: 0;
   padding: 0;
+  background-color: #f2f2f2; /* Soft background color for the page */
 }
 
 .hero-section {
-  background-color: #f8f8f8;
-  padding: 50px 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(145deg, #f8f8f8, #e2e2e2); /* Subtle gradient */
+  padding: 50px 40px; /* Increased padding */
+  text-align: center;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  width: 85%; /* Increased width to make the card larger */
+  max-width: 750px; /* Set larger max-width */
+  min-width: 500px; /* Minimum width to maintain proportions on smaller screens */
 }
 
 .logo {
-  width: 150px;
-  margin-bottom: 20px;
+  width: 150px; /* Increased logo size */
+  margin-bottom: 30px; /* Increased space between logo and text */
 }
 
 h1 {
-  font-size: 2.5em;
+  font-size: 3em; /* Larger font size */
   color: #e67e22; /* Matches the logo color */
+  margin-bottom: 20px; /* Increased spacing between heading and text */
 }
 
 p {
-  font-size: 1.2em;
-  margin-bottom: 20px;
+  font-size: 1.4em; /* Larger text */
+  margin-bottom: 40px;
+  line-height: 1.6;
+  color: #555;
 }
 
-.cta-button {
-  background-color: #e67e22; /* Button color matching the logo */
+.button-group {
+  display: flex;
+  gap: 25px; /* Increased gap between buttons */
+  justify-content: center;
+}
+
+.cta-button, .guest-button {
+  background-color: #e67e22;
   color: #fff;
-  padding: 10px 20px;
+  padding: 15px 30px; /* Increased padding */
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1em;
+  font-size: 1.2em; /* Larger font for buttons */
   transition: background-color 0.3s ease;
+  width: 200px; /* Fixed width for buttons */
 }
 
-.cta-button:hover {
+.cta-button:hover, .guest-button:hover {
   background-color: #d35400; /* Darker shade for hover effect */
 }
 </style>

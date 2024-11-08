@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <nav v-if="showNavBar">
-      <router-link to="/shop">Shop Items</router-link> | 
+      <!-- <router-link to="/shop">Shop Items</router-link> | -->
       <!-- Conditionally render Login/Logout based on user's login status -->
-      <router-link v-if="!isLoggedIn" to="/login">
-        <a href="#">Login</a>
-      </router-link>
-      <a v-if="isLoggedIn" href="#" @click="logoutUser">Logout</a>
+     <!-- <router-link v-if="!isLoggedIn" to="/login"> -->
+     <!--   <a href="#">Login</a> -->
+     <!-- </router-link> -->
+    <!--  <a v-if="isLoggedIn" href="#" @click="logoutUser">Logout</a> -->
     </nav>
     <router-view :isLoggedIn="isLoggedIn" @login="handleLogin" />
   </div>
