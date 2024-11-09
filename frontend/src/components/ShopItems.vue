@@ -2,6 +2,9 @@
   <div class="shop-page">
     <h2>Shop Items</h2>
 
+    <!-- Logout Button (At the top-right corner) -->
+    <button class="logout-button" @click="logout">Logout</button>
+
     <!-- Cart Icon (Always Visible) -->
     <div class="cart-icon" :class="{ 'cart-button-active': isCartDrawerOpen }" @click="toggleCartDrawer">
       <img src="/images/cart.png" alt="Cart" class="cart-image"/>
@@ -102,7 +105,7 @@ export default {
     filteredItems() {
       return this.items.filter(item => {
         const matchesCategory = !this.selectedCategory || item.category === this.selectedCategory;
-        const matchesWeather = !this.selectedWeather || item.weather === this.selectedWeather || item.weather === "BOTH";
+        const matchesWeather = !this.selectedWeather || item.weather === this.selectedWeather;
         const matchesLocation = !this.selectedLocation || item.restaurant.city === this.selectedLocation;
         return matchesCategory && matchesWeather && matchesLocation;
       });
@@ -119,7 +122,9 @@ export default {
   },
   
   methods: {
-    async fetchItems() {
+
+  
+async fetchItems() {
       try {
         const response = await axios.get('http://localhost:8080/api/items');
         this.items = response.data;
@@ -136,30 +141,87 @@ export default {
       }
     },
 
-    async placeOrder() {
-      if (this.cart.length === 0) {
-        alert('Cart is empty. Please add items.');
-        return;
-      }
-      const orderData = {
-        user: { id: 1 }, 
-        dateTime: new Date().toISOString(),
-        weather: this.selectedWeather || 'both',
-        items: this.cart.map(item => ({ id: item.id })), 
-        price: this.totalCartPrice
-      };
+  logout() {
+    // Clear any authentication data (e.g., tokens)
+    localStorage.removeItem('authToken');
+    
+    // Redirect to Login Page
+    this.$router.push('/login');
+  },
 
-      try {
-        const response = await axios.post('http://localhost:8080/api/orders', orderData);
-        console.log('Order placed successfully:', response.data);
-        alert('Order placed successfully!');
-        this.cart = [];
-        this.isCartDrawerOpen = false;
-      } catch (error) {
-        console.error('Error placing order:', error);
-        alert('Failed to place the order. Please try again.');
+async placeOrder() {
+  // Check if the cart is empty
+  if (this.cart.length === 0) {
+    alert('Cart is empty. Please add items.');
+    return;
+  }
+
+  // Validate selected weather
+  const validWeatherValues = ['COLD', 'RAINY', 'HOT'];
+  const weather = validWeatherValues.includes(this.selectedWeather) ? this.selectedWeather : null;
+
+  if (!weather && this.selectedWeather !== '') {
+    alert('Select the weather from the drop-down.');
+    return;
+  }
+
+  // Check if the user is already logged in by checking for a stored token
+let userId = 1;  // Default to guest user if not logged in
+let token = localStorage.getItem('authToken') || '';  // Retrieve token from localStorage if available
+
+if (!token) {
+  // User is not logged in; attempt to log in
+  try {
+    const userResponse = await axios.post('http://localhost:8080/api/users/login', {
+      email: this.email,
+      password: this.password
+    });
+
+    if (userResponse.data && userResponse.data.id && userResponse.data.token) {
+      userId = userResponse.data.id; // Use the logged-in user's ID
+      token = userResponse.data.token;  // Store the JWT token
+      localStorage.setItem('authToken', token); // Save token in localStorage for future requests
+    } else {
+      alert('Invalid login credentials. Please check your email and password.');
+      return;
+    }
+  } catch (error) {
+    console.error('Error fetching user info:', error);
+    alert('An error occurred while logging in. Please try again later.');
+    return;
+  }
+}
+
+  // Prepare order data
+  const orderData = {
+    user: { id: userId },
+    dateTime: new Date().toISOString(),
+    weather: weather,
+    items: this.cart.map(item => ({ id: item.id, quantity: item.quantity })),
+    price: this.totalCartPrice
+  };
+
+  // Place the order with token in the header
+  try {
+    const response = await axios.post('http://localhost:8080/api/orders', orderData, {
+      headers: {
+        'Authorization': `Bearer ${token}`  // Include the token in the Authorization header
       }
-    },
+    });
+    console.log('Order saved successfully:', response.data);
+
+    // After placing the order, redirect to the Order History page
+    this.$router.push('/order-history');  // Use Vue Router to navigate
+
+    // Clear the cart and close the cart drawer
+    this.cart = [];
+    this.isCartDrawerOpen = false;
+  } catch (error) {
+    console.error('Error placing order:', error);
+    alert('Failed to place the order. Please try again.');
+  }
+},
+
     getItemImage(item) {
       return `/images/${item.filename}`;
     },
@@ -199,6 +261,21 @@ export default {
 <style>
 .shop-page {
   position: relative; 
+}
+
+.logout-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px 12px;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: darkred;
 }
 
 .cart-button {
@@ -355,5 +432,25 @@ export default {
   font-weight: bold;
 }
 
+.cart-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  background-color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  z-index: 20;
+}
+.cart-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 15;
+}
 
 </style>

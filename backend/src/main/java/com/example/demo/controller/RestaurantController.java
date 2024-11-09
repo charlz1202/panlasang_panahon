@@ -1,20 +1,27 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Restaurant;
-import com.example.demo.service.RestaurantService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.demo.model.Restaurant;
+import com.example.demo.service.RestaurantService;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -42,7 +49,7 @@ public class RestaurantController {
             response.put("name", restaurant.getName());
             response.put("address", restaurant.getFullAddress());
             response.put("phone", restaurant.getPhone());
-            response.put("location", restaurant.getCity());
+            response.put("location", restaurant.getLocation());
             return ResponseEntity.ok().body(response);
         } else {
             return ResponseEntity.notFound().build();

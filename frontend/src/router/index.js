@@ -14,10 +14,11 @@ const routes = [
   { path: '/upload/restaurant', component: UploadRestaurant },
   { path: '/upload/item', component: UploadItem },
   { path: '/shop', component: ShopItems },
-  { path: '/order-summary', 
-    name: 'order-summary', 
-    component: () => import('@/components/OrderSummaryPage.vue')
-  }, // Add route for the Order Summary page
+  { 
+    path: '/order-history', 
+    name: 'order-history', 
+    component: () => import('@/components/OrderHistoryPage.vue') 
+  }, 
 ];
 
 const router = createRouter({

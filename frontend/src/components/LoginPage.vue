@@ -34,44 +34,49 @@ export default {
     };
   },
   methods: {
-    async loginUser() {
-      try {
-        const response = await fetch('http://localhost:8080/api/users/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: this.email,
-            password: this.password,
-          }),
-        });
+async loginUser() {
+  try {
+    const response = await fetch('http://localhost:8080/api/users/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: this.email,
+        password: this.password,
+      }),
+    });
 
-        const data = await response.json();
+    const data = await response.json();
 
-        if (response.ok) {
-          // Save user data in localStorage
-          const user = {
-            phone: data.id,
-            email: data.email,
-            fullname: data.fullname,
-            location: data.location,  // Assuming location is returned from the backend
-          };
+    if (response.ok) {
+      // Save user data and token in localStorage
+      const user = {
+        id: data.id,
+        email: data.email,
+        fullname: data.fullname,
+        location: data.location,  // Assuming location is returned from the backend
+      };
+      const token = data.token;  // Assuming token is returned from the backend
 
-          localStorage.setItem('user', JSON.stringify(user));  // Store user data
-          this.$emit('login');
-          console.log('Login successful, redirecting...');
-          const redirectTo = this.$route.query.redirect || '/shop'; // Check if there is a redirect query param
-          console.log(`Redirecting to: ${redirectTo}`);
-          this.$router.push(redirectTo);  // Redirect to the appropriate page
-        } else {
-          this.loginError = data.message || 'Invalid credentials'; // Display error message on the page
-        }
-      } catch (error) {
-        console.error('Error during login:', error);
-        this.loginError = 'Failed to login. Please check the console for details.';
-      }
-    },
+      // Save user info and token in localStorage
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('authToken', token);  // Save the token
+
+      this.$emit('login');
+      console.log('Login successful, redirecting...');
+
+      const redirectTo = this.$route.query.redirect || '/shop'; // Check if there is a redirect query param
+      console.log(`Redirecting to: ${redirectTo}`);
+      this.$router.push(redirectTo);  // Redirect to the appropriate page
+    } else {
+      this.loginError = data.message || 'Invalid credentials'; // Display error message on the page
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+    this.loginError = 'Failed to login. Please check the console for details.';
+  }
+},
 
     redirectToRegistration() {
       this.$router.push('/register');

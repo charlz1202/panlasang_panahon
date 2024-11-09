@@ -15,6 +15,7 @@
 <script>
 import { ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
+import axios from 'axios';
 
 export default {
   name: 'App',
@@ -54,6 +55,21 @@ export default {
     watchEffect(() => {
       showNavBar.value = (route.path !== '/login' && route.path !== '/register'); // Hide navbar if the route is '/login'
     });
+
+       // Global Axios interceptor to add the auth token
+    axios.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem('authToken');  // Retrieve token from localStorage
+        if (token) {
+          config.headers['Authorization'] = `Bearer ${token}`;  // Add token to the headers
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);  // Handle request error
+      }
+    );
+
 
     return { isLoggedIn, logoutUser, handleLogin, showNavBar };
   }

@@ -1,6 +1,5 @@
 package com.example.demo.model;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -17,36 +16,49 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "orders")
-public class Order {
+@Table(name = "order_history")
+public class OrderHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "weather")
+    private Weather weather;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user; // Relation with User table
+    private User user;
 
-    @Column(name = "datetime", nullable = false)
-    private LocalDateTime datetime; // Order date and time
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "weather", nullable = false)
-    private Weather weather; // Weather (cold, hot, rainy)
+    @Column(name = "date_time")
+    private String dateTime;
 
     @ManyToMany
     @JoinTable(
-        name = "order_items",
-        joinColumns = @JoinColumn(name = "order_id"),
-        inverseJoinColumns = @JoinColumn(name = "item_id")
-    )
-    private List<Item> items; // Relation with Item table
+      name = "order_history_items", // Join table name for the many-to-many relation
+      joinColumns = @JoinColumn(name = "order_history_id"), // Foreign key for order_history
+      inverseJoinColumns = @JoinColumn(name = "item_id")) // Foreign key for item
+    private List<Item> items;
 
-    @Column(name = "price", nullable = false)
-    private Double price; // Total price of the order
+    @Column(name = "price")
+    private Double price;
 
-    // Getters and Setters
+    // Default constructor
+    public OrderHistory() {
+    }
+
+    // Constructor with parameters
+    public OrderHistory(Long id, User user, String dateTime, Weather weather, List<Item> items, Double price) {
+        this.id = id;
+        this.user = user;
+        this.dateTime = dateTime;
+        this.weather = weather;
+        this.items = items;
+        this.price = price;
+    }
+
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -63,12 +75,12 @@ public class Order {
         this.user = user;
     }
 
-    public LocalDateTime getDatetime() {
-        return datetime;
+    public String getDateTime() {
+        return dateTime;
     }
 
-    public void setDatetime(LocalDateTime datetime) {
-        this.datetime = datetime;
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
     }
 
     public Weather getWeather() {

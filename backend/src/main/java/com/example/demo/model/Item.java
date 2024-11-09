@@ -1,14 +1,11 @@
 package com.example.demo.model;
 
+import java.util.List;
+
 import com.example.demo.deserializer.CategoryDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,29 +25,29 @@ public class Item {
 
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")
     private Double price;
-    
+
+    // Enum for Item Category - DRINK, DESSERT, MAIN_DISH
     public enum Category {
         DRINK, DESSERT, MAIN_DISH
     }
-    
+
     @JsonDeserialize(using = CategoryDeserializer.class)
     private Category category;
 
-    // Choices for Weather
-    public enum Weather {
-        COLD, HOT, RAINY
-    }
-
+    // Reference to the Weather enum defined in another file
     private Weather weather;
 
     // Many-to-One relation with Restaurant
-    // Relation to Restaurant table
     @ManyToOne
     @NotNull
     private Restaurant restaurant;
 
-    // New field to store the image file name
+    // Field to store the image file name
     private String filename;
+
+    // Many-to-Many relation with OrderHistory (This part is added for OrderHistory)
+    @ManyToMany(mappedBy = "items")
+    private List<OrderHistory> orderHistories;
 
     // Getters and Setters
 
@@ -116,5 +113,13 @@ public class Item {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public List<OrderHistory> getOrderHistories() {
+        return orderHistories;
+    }
+
+    public void setOrderHistories(List<OrderHistory> orderHistories) {
+        this.orderHistories = orderHistories;
     }
 }
