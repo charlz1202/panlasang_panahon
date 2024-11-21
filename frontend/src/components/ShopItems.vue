@@ -1,5 +1,8 @@
 <template>
   <div class="shop-page">
+    <!-- Logo -->
+    <img src="@/assets/logo.jpg" alt="Panlasang Panahon Logo" class="logo" />
+
     <h2>Shop Items</h2>
 
     <!-- Hamburger Menu -->
@@ -247,6 +250,13 @@ h2 {
   z-index: 1000;
   cursor: pointer;
   font-size: 24px;
+}
+
+/* Logo Styling */
+.logo {
+  display: block;
+  margin: 0 auto 20px;
+  width: 150px; /* Adjust the width of the logo */
 }
 
 /* Floating Cart Icon */

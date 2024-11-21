@@ -3,6 +3,8 @@
     class="container d-flex flex-column min-vh-100 justify-content-center align-items-center"
     style="max-width: 600px"
   >
+    <!-- Logo -->
+    <img src="@/assets/logo.jpg" alt="Panlasang Panahon Logo" class="logo mb-3" />
     <h2 class="mb-3">Panlasang Panahon</h2>
     <div class="row" style="max-width: 300px">
       <form class="form-login" @submit.prevent="loginUser">
@@ -90,6 +92,12 @@ export default {
 </script>
 
 <style scoped>
+/* Style for the logo */
+.logo {
+  width: 150px; /* Adjust the size of the logo */
+  margin-bottom: 20px; /* Space between the logo and the heading */
+}
+
 .form-login input:focus {
   z-index: 1;
 }
