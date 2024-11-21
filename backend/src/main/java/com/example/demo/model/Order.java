@@ -26,7 +26,7 @@ public class Order {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(name = "datetime", nullable = false)
@@ -35,7 +35,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     @NotNull
     @Column(name = "weather", nullable = false)
-    private Weather weather; // Weather field (HOT, COLD, RAINY)
+    private Weather weather;
 
     @ManyToMany
     @JoinTable(
@@ -47,7 +47,7 @@ public class Order {
 
     @Column(name = "price", nullable = false)
     private Double price;
-
+    
     // Getters and Setters
     public Long getId() {
         return id;
