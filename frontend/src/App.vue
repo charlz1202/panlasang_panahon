@@ -1,97 +1,120 @@
 <template>
   <div id="app">
-    <nav v-if="showNavBar">
-      <!-- <router-link to="/shop">Shop Items</router-link> | -->
-      <!-- Conditionally render Login/Logout based on user's login status -->
-     <!-- <router-link v-if="!isLoggedIn" to="/login"> -->
-     <!--   <a href="#">Login</a> -->
-     <!-- </router-link> -->
-    <!--  <a v-if="isLoggedIn" href="#" @click="logoutUser">Logout</a> -->
-    </nav>
-    <router-view :isLoggedIn="isLoggedIn" @login="handleLogin" />
+    <!-- Hamburger Menu (Visible for logged-in users) -->
+    <div v-if="isLoggedIn" class="hamburger-menu">
+      <button class="hamburger-button" @click="toggleMenu">
+        &#9776; <!-- Hamburger Icon -->
+      </button>
+      <div v-if="menuOpen" class="menu-content">
+        <ul>
+          <li><router-link to="/order-history">Order History</router-link></li>
+          <li><button @click="logoutUser">Logout</button></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <router-view />
   </div>
 </template>
 
 <script>
-import { ref, watchEffect } from 'vue';
-import { useRoute } from 'vue-router';
-import axios from 'axios';
+import { ref, watchEffect } from "vue";
 
 export default {
-  name: 'App',
+  name: "App",
   setup() {
-    const route = useRoute();
-    // Track login status based on 'user' in localStorage
-    const isLoggedIn = ref(!!localStorage.getItem('user'));
+    // Track login status based on 'authToken' in localStorage
+    const isLoggedIn = ref(!!localStorage.getItem("authToken"));
 
     // Watch localStorage to reactively update isLoggedIn
     watchEffect(() => {
-      isLoggedIn.value = !!localStorage.getItem('user');
+      isLoggedIn.value = !!localStorage.getItem("authToken");
     });
 
-    // Function to logout the user
+    // Menu state for hamburger menu
+    const menuOpen = ref(false);
+
+    // Toggle menu visibility
+    const toggleMenu = () => {
+      menuOpen.value = !menuOpen.value;
+    };
+
+    // Log out the user
     const logoutUser = () => {
-      try {
-        // Clear user data from localStorage
-        localStorage.removeItem('user');
-
-        // Set isLoggedIn to false to hide logout and show login
-        isLoggedIn.value = false;
-
-        // Optionally, redirect to login page after logout
-        window.location.href = '/login'; // Reload page to update state
-      } catch (error) {
-        console.error('Error during logout:', error);
-      }
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
+      isLoggedIn.value = false;
+      menuOpen.value = false; // Close the menu
+      window.location.href = "/login"; // Redirect to login
     };
 
-    // Handle successful login
-    const handleLogin = () => {
-      isLoggedIn.value = true;
-    };
-
-    // show or hide the navbar based on the current route
-    const showNavBar = ref(true);
-    watchEffect(() => {
-      showNavBar.value = (route.path !== '/login' && route.path !== '/register'); // Hide navbar if the route is '/login'
-    });
-
-       // Global Axios interceptor to add the auth token
-    axios.interceptors.request.use(
-      (config) => {
-        const token = localStorage.getItem('authToken');  // Retrieve token from localStorage
-        if (token) {
-          config.headers['Authorization'] = `Bearer ${token}`;  // Add token to the headers
-        }
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);  // Handle request error
-      }
-    );
-
-
-    return { isLoggedIn, logoutUser, handleLogin, showNavBar };
-  }
+    return { isLoggedIn, menuOpen, toggleMenu, logoutUser };
+  },
 };
 </script>
 
-<style>
+<style scoped>
 body {
-  margin: 10px !important;
+  margin: 0;
+  font-family: Arial, sans-serif;
 }
+
 #app {
   text-align: center;
 }
-nav {
-  margin-bottom: 20px;
+
+.hamburger-menu {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
 }
-nav a {
-  text-decoration: none;
-  color: #42b983;
+
+.hamburger-button {
+  font-size: 24px;
+  background: none;
+  border: none;
   cursor: pointer;
+  color: #333;
 }
-nav a:hover {
-  text-decoration: underline;
+
+.menu-content {
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.menu-content ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-content ul li {
+  padding: 10px 15px;
+  text-align: left;
+}
+
+.menu-content ul li a,
+.menu-content ul li button {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  display: block;
+  text-align: left;
+}
+
+.menu-content ul li button:hover,
+.menu-content ul li a:hover {
+  background-color: #f2f2f2;
 }
 </style>

@@ -26,6 +26,10 @@ public class OrderHistoryService {
     @Autowired
     private ItemRepository itemRepository;
 
+    public List<OrderHistory> getOrderHistoryByUserId(Long userId) {
+        return orderHistoryRepository.findByUserId(userId);
+    }
+    
     public OrderHistory saveOrderHistory(OrderHistory orderHistory) {
         return orderHistoryRepository.save(orderHistory);
     }

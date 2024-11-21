@@ -2,16 +2,27 @@
   <div class="shop-page">
     <h2>Shop Items</h2>
 
-    <!-- Logout Button (At the top-right corner) -->
-    <button class="logout-button" @click="logout">Logout</button>
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu" @click="toggleMenu">
+      <i class="fas fa-bars"></i>
+    </div>
+    <transition name="fade">
+      <div v-if="isMenuOpen" class="menu-overlay" @click.self="toggleMenu">
+        <div class="menu">
+          <ul>
+            <li><a @click="goToOrderHistory">Order History</a></li>
+            <li><a @click="logout">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </transition>
 
-    <!-- Cart Icon (Always Visible) -->
-    <div class="cart-icon" :class="{ 'cart-button-active': isCartDrawerOpen }" @click="toggleCartDrawer">
-      <img src="/images/cart.png" alt="Cart" class="cart-image"/>
-      <input type="number" class="cart-count text-center" v-model.number="displayItemCount" disabled/>
+    <!-- Cart Icon -->
+    <div class="cart-icon" @click="toggleCartDrawer">
+      <img src="/images/cart.png" alt="Cart" class="cart-image" />
     </div>
 
-    <!-- Filter by Category, Weather, and Location -->
+    <!-- Filters -->
     <div class="filters">
       <label for="category">Category:</label>
       <select v-model="selectedCategory">
@@ -23,7 +34,6 @@
 
       <label for="weather">Weather:</label>
       <select v-model="selectedWeather">
-        <option value="">All</option>
         <option value="HOT">Summer</option>
         <option value="COLD">Cold</option>
         <option value="RAINY">Rainy</option>
@@ -38,7 +48,7 @@
       </select>
     </div>
 
-    <!-- Display items as cards based on filters -->
+    <!-- Items Display -->
     <div v-if="filteredItems.length > 0" class="card-container">
       <div v-for="item in filteredItems" :key="item.id" class="card">
         <img :src="getItemImage(item)" alt="Item Image" class="item-image" />
@@ -46,7 +56,7 @@
           <h3>{{ item.name }}</h3>
           <p>{{ item.description }}</p>
           <p>Available at <b>{{ item.restaurant.name }}</b></p>
-          
+
           <div class="card-bottom">
             <p class="price"><strong>${{ item.price }}</strong></p>
             <button @click="addToCart(item)">Add to Cart</button>
@@ -70,9 +80,15 @@
                 <img :src="getItemImage(item)" alt="Item Image" class="cart-item-image" />
                 <p class="price">${{ item.price }}</p>
                 <div>
-                  <input class="qty" type="number" v-model.number="item.quantity" min="1" @change="updateCartItemQuantity(index)" />
-                  <a href='#' @click="removeFromCart(index)" class="remove-button">
-                    <i class="fas fa-trash-alt"></i> <!-- FontAwesome icon for remove -->
+                  <input
+                    class="qty"
+                    type="number"
+                    v-model.number="item.quantity"
+                    min="1"
+                    @change="updateCartItemQuantity(index)"
+                  />
+                  <a href="#" @click.prevent="removeFromCart(index)" class="remove-button">
+                    <i class="fas fa-trash-alt"></i>
                   </a>
                 </div>
               </div>
@@ -85,25 +101,25 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
     return {
       items: [],
       cart: [],
-      selectedCategory: '',
-      selectedWeather: '',
-      selectedLocation: '',
+      selectedCategory: "",
+      selectedWeather: "HOT",
+      selectedLocation: "",
       availableLocations: [],
-      userLocation: '',
+      userLocation: "Vancouver",
       isCartDrawerOpen: false,
-      orderSuccess: false,
+      isMenuOpen: false,
     };
   },
   computed: {
     filteredItems() {
-      return this.items.filter(item => {
+      return this.items.filter((item) => {
         const matchesCategory = !this.selectedCategory || item.category === this.selectedCategory;
         const matchesWeather = !this.selectedWeather || item.weather === this.selectedWeather;
         const matchesLocation = !this.selectedLocation || item.restaurant.city === this.selectedLocation;
@@ -111,127 +127,82 @@ export default {
       });
     },
     totalCartPrice() {
-        return this.cart.reduce((total, item) => total + item.price * item.quantity, 0);
+      return this.cart.reduce((total, item) => total + item.price * item.quantity, 0);
     },
-    totalItemsCount() {
-      return this.cart.reduce((count, item) => count + item.quantity, 0);
-    },
-    displayItemCount() {
-      return this.totalItemsCount === 0 ? '' : this.totalItemsCount;
-    }
   },
-  
   methods: {
-
-  
-async fetchItems() {
+    async fetchItems() {
       try {
-        const response = await axios.get('http://localhost:8080/api/items');
+        const response = await axios.get("http://localhost:8080/api/items");
         this.items = response.data;
-        this.availableLocations = [...new Set(this.items.map(item => item.restaurant.location))];
-        if (localStorage.getItem('user')) {
-          const user = JSON.parse(localStorage.getItem('user'));
-          if (user && user.location) {
-            this.userLocation = user.location;
-            this.selectedLocation = user.location;
-          }
+        this.availableLocations = [...new Set(this.items.map((item) => item.restaurant.city))];
+
+        if (this.availableLocations.includes(this.userLocation)) {
+          this.selectedLocation = this.userLocation;
+        } else {
+          this.selectedLocation = "Vancouver";
         }
       } catch (error) {
-        console.error('Error fetching items:', error);
+        console.error("Error fetching items:", error);
       }
     },
-
-  logout() {
-    // Clear any authentication data (e.g., tokens)
-    localStorage.removeItem('authToken');
-    
-    // Redirect to Login Page
-    this.$router.push('/login');
-  },
-
-async placeOrder() {
-  // Check if the cart is empty
-  if (this.cart.length === 0) {
-    alert('Cart is empty. Please add items.');
-    return;
-  }
-
-  // Validate selected weather
-  const validWeatherValues = ['COLD', 'RAINY', 'HOT'];
-  const weather = validWeatherValues.includes(this.selectedWeather) ? this.selectedWeather : null;
-
-  if (!weather && this.selectedWeather !== '') {
-    alert('Select the weather from the drop-down.');
-    return;
-  }
-
-  // Check if the user is already logged in by checking for a stored token
-let userId = 1;  // Default to guest user if not logged in
-let token = localStorage.getItem('authToken') || '';  // Retrieve token from localStorage if available
-
-if (!token) {
-  // User is not logged in; attempt to log in
-  try {
-    const userResponse = await axios.post('http://localhost:8080/api/users/login', {
-      email: this.email,
-      password: this.password
-    });
-
-    if (userResponse.data && userResponse.data.id && userResponse.data.token) {
-      userId = userResponse.data.id; // Use the logged-in user's ID
-      token = userResponse.data.token;  // Store the JWT token
-      localStorage.setItem('authToken', token); // Save token in localStorage for future requests
-    } else {
-      alert('Invalid login credentials. Please check your email and password.');
-      return;
-    }
-  } catch (error) {
-    console.error('Error fetching user info:', error);
-    alert('An error occurred while logging in. Please try again later.');
-    return;
-  }
-}
-
-  // Prepare order data
-  const orderData = {
-    user: { id: userId },
-    dateTime: new Date().toISOString(),
-    weather: weather,
-    items: this.cart.map(item => ({ id: item.id, quantity: item.quantity })),
-    price: this.totalCartPrice
-  };
-
-  // Place the order with token in the header
-  try {
-    const response = await axios.post('http://localhost:8080/api/orders', orderData, {
-      headers: {
-        'Authorization': `Bearer ${token}`  // Include the token in the Authorization header
+    logout() {
+      localStorage.removeItem("authToken");
+      this.cart = [];
+      this.selectedLocation = "";
+      window.location.href = "/login";
+    },
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+    },
+    goToOrderHistory() {
+      this.$router.push("/order-history");
+      this.toggleMenu();
+    },
+    async placeOrder() {
+      const authToken = localStorage.getItem("authToken");
+      if (!authToken) {
+        alert("You must be logged in to place an order.");
+        this.$router.push("/login");
+        return;
       }
-    });
-    console.log('Order saved successfully:', response.data);
 
-    // After placing the order, redirect to the Order History page
-    this.$router.push('/order-history');  // Use Vue Router to navigate
+      const orderData = {
+        items: this.cart.map((item) => ({ id: item.id, quantity: item.quantity })),
+        price: this.totalCartPrice,
+        weather: this.selectedWeather,
+      };
 
-    // Clear the cart and close the cart drawer
-    this.cart = [];
-    this.isCartDrawerOpen = false;
-  } catch (error) {
-    console.error('Error placing order:', error);
-    alert('Failed to place the order. Please try again.');
-  }
-},
-
+      try {
+        await axios.post("http://localhost:8080/api/orders", orderData, {
+          headers: { Authorization: `Bearer ${authToken}` },
+        });
+        alert("Order placed successfully!");
+        this.cart = [];
+        this.toggleCartDrawer(false);
+      } catch (error) {
+        console.error("Error placing order:", error);
+      }
+    },
     getItemImage(item) {
       return `/images/${item.filename}`;
     },
     addToCart(item) {
-      const existingItem = this.cart.find(cartItem => cartItem.id === item.id);
+      const authToken = localStorage.getItem("authToken");
+
+      if (!authToken) {
+        alert("You must be logged in to add items to the cart.");
+        window.location.href = "/login";
+        return;
+      }
+
+      const existingItem = this.cart.find((cartItem) => cartItem.id === item.id);
       if (existingItem) {
         existingItem.quantity += 1;
       } else {
         this.cart.push({ ...item, quantity: 1 });
       }
+
       this.isCartDrawerOpen = true;
     },
     updateCartItemQuantity(index) {
@@ -241,77 +212,81 @@ if (!token) {
     },
     removeFromCart(index) {
       this.cart.splice(index, 1);
-      if (this.cart.length === 0) {
-        this.isCartDrawerOpen = false;
-      }
     },
-    
-    toggleCartDrawer() {
-      if (this.cart.length > 0) {
+    toggleCartDrawer(state) {
+      if (typeof state === "boolean") {
+        this.isCartDrawerOpen = state;
+      } else {
         this.isCartDrawerOpen = !this.isCartDrawerOpen;
       }
-    }
+    },
   },
   mounted() {
-    this.fetchItems(); // Load items when component is mounted
-  }
+    this.fetchItems();
+  },
 };
 </script>
 
-<style>
+<style scoped>
+/* General Styles */
 .shop-page {
-  position: relative; 
+  position: relative;
+  padding: 20px;
 }
 
-.logout-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 8px 12px;
-  background-color: red;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.logout-button:hover {
-  background-color: darkred;
-}
-
-.cart-button {
-  position: fixed; 
-  top: 10px; 
-  right: 10px; 
-  z-index: 10; 
-  background-color: #007bff; 
-  color: white; 
-  border: none; 
-  padding: 8px 12px; 
-  border-radius: 5px; 
-  cursor: pointer; 
-}
-
-.cart-drawer {
-  position: fixed; 
-  top: 0;
-  right: 0; 
-  width: 300px; 
-  height: 100%; 
-  background-color: white; 
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5); 
-  overflow-y: auto; 
-  z-index: 5; 
-  transition: transform 0.3s ease; 
-}
-
-.cart-drawer-content {
-  padding: 20px; 
-}
-
-.filters {
+h2 {
+  text-align: center;
   margin-bottom: 20px;
 }
 
+/* Hamburger Menu */
+.hamburger-menu {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+/* Floating Cart Icon */
+.cart-icon {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cart-icon img {
+  width: 24px;
+  height: 24px;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.filters label {
+  font-weight: bold;
+}
+
+/* Card Grid */
 .card-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -328,7 +303,6 @@ if (!token) {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.2s ease;
-  height: 100%;
 }
 
 .card:hover {
@@ -339,25 +313,52 @@ if (!token) {
   padding: 15px;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  align-items: center;
+  text-align: center;
 }
-
-.item-image {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-}
-
 
 .card-bottom {
-  margin-top: auto; 
+  margin-top: auto;
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
 }
 
 .price {
   font-weight: bold;
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+
+/* Item Images */
+.item-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Cart Drawer */
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  background-color: white;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+.cart-drawer-content {
+  padding: 20px;
+}
+
+.cart-items {
+  list-style: none;
+  padding: 0;
 }
 
 .cart-item {
@@ -368,8 +369,8 @@ if (!token) {
 
 .cart-item-details {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  align-items: center;
+  gap: 10px;
 }
 
 .cart-item-image {
@@ -380,6 +381,7 @@ if (!token) {
 
 .qty {
   width: 50px;
+  text-align: center;
 }
 
 .remove-button {
@@ -387,70 +389,54 @@ if (!token) {
   cursor: pointer;
 }
 
-.cart-items {
-  list-style: none;
-  padding-left: 0;
-}
-
-.cart-icon {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  z-index: 10;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px; /* Reduced padding to avoid large icon */
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px; /* Set a fixed width */
-  height: 50px; /* Set a fixed height */
-}
-
-.cart-icon img {
-  width: 25px; /* Control the size of the cart icon image */
-  height: 25px;
-}
-
-.cart-count {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background-color: red;
-  color: white;
-  font-size: 12px; /* Make the count smaller */
-  padding: 2px 5px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 18px;
-  height: 18px;
-  font-weight: bold;
-}
-
-.cart-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  background-color: white;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  z-index: 20;
-}
-.cart-overlay {
+/* Menu Overlay */
+.menu-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 15;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 900;
 }
 
+.menu {
+  position: absolute;
+  top: 50px;
+  left: 10px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu ul li {
+  margin-bottom: 10px;
+}
+
+.menu ul li a {
+  color: #007bff;
+  cursor: pointer;
+}
+
+.menu ul li a:hover {
+  text-decoration: underline;
+}
+
+/* Transition Styles */
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease;
+}
+
+.slide-enter,
+.slide-leave-to {
+  transform: translateX(100%);
+}
 </style>

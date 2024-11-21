@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -10,7 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -32,13 +32,13 @@ public class OrderHistory {
     private User user;
 
     @Column(name = "date_time")
-    private String dateTime;
+    private LocalDateTime dateTime;
 
     @ManyToMany
-    @JoinTable(
-      name = "order_history_items", // Join table name for the many-to-many relation
-      joinColumns = @JoinColumn(name = "order_history_id"), // Foreign key for order_history
-      inverseJoinColumns = @JoinColumn(name = "item_id")) // Foreign key for item
+    //@JoinTable(
+      //name = "order_history_items", // Join table name for the many-to-many relation
+      //joinColumns = @JoinColumn(name = "order_history_id"), // Foreign key for order_history
+      //inverseJoinColumns = @JoinColumn(name = "item_id")) // Foreign key for item
     private List<Item> items;
 
     @Column(name = "price")
@@ -49,7 +49,7 @@ public class OrderHistory {
     }
 
     // Constructor with parameters
-    public OrderHistory(Long id, User user, String dateTime, Weather weather, List<Item> items, Double price) {
+    public OrderHistory(Long id, User user, LocalDateTime dateTime, Weather weather, List<Item> items, Double price) {
         this.id = id;
         this.user = user;
         this.dateTime = dateTime;
@@ -75,11 +75,11 @@ public class OrderHistory {
         this.user = user;
     }
 
-    public String getDateTime() {
+    public LocalDateTime getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(String dateTime) {
+    public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 

@@ -21,8 +21,8 @@ export default {
     },
     navigateToShop() {
       this.$router.push('/shop'); // Direct to ShopItems.vue for non-registered users
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -74,7 +74,8 @@ p {
   justify-content: center;
 }
 
-.cta-button, .guest-button {
+.cta-button,
+.guest-button {
   background-color: #e67e22;
   color: #fff;
   padding: 15px 30px; /* Increased padding */
@@ -86,7 +87,8 @@ p {
   width: 200px; /* Fixed width for buttons */
 }
 
-.cta-button:hover, .guest-button:hover {
+.cta-button:hover,
+.guest-button:hover {
   background-color: #d35400; /* Darker shade for hover effect */
 }
 </style>

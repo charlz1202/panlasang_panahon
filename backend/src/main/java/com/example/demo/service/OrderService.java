@@ -15,6 +15,10 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
+    public Order placeOrder(Order order) throws Exception {
+               return orderRepository.save(order);
+    }
+
     public Order saveOrder(Order order) {
         return orderRepository.save(order);
     }

@@ -1,18 +1,20 @@
 package com.example.demo.service;
 
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.Item;
-import com.example.demo.model.Restaurant;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.Optional;
 
 @Service
 public class UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -20,47 +22,54 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    // Method to register a user
     public User registerUser(User user) throws Exception {
         // Check if email is already registered
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
-        
+
         if (existingUser.isPresent()) {
-            throw new Exception("User with this email already exists!");
+            throw new UserAlreadyExistsException("User with this email already exists!");
         }
 
         // Hash the password
         String hashedPassword = passwordEncoder.encode(user.getPassword());
-        //System.out.println("Hashed Password: " + hashedPassword);  // Log the hashed password
         user.setPassword(hashedPassword);
 
         // Save user to the database
         return userRepository.save(user);
     }
 
-
+    // Method to authenticate a user during login
     public boolean authenticate(String email, String password) {
+        // Log the incoming authentication attempt
+        logger.info("Attempting login for email: " + email);
+
         Optional<User> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            
-            // Log the hashed password stored in the database
-            //System.out.println("Stored Hashed Password: " + user.getPassword());
-            
-            // Compare hashed password with the provided password
+
+            // Compare provided password with the hashed password in the database
             boolean isMatch = passwordEncoder.matches(password, user.getPassword());
-            System.out.println("Password Match: " + isMatch);  // Log the result of password comparison
+            logger.info("Password Match: " + isMatch);  // Log the result of password comparison
             
             return isMatch;
         } else {
-        	System.out.println("User " + email + "does not exist.");
+            logger.warn("User with email " + email + " does not exist.");
         }
+
         return false;  // User not found or password does not match
     }
-    
-    // Get user by email
+
+    // Method to get user by email
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
     }
-
+    
+    // Custom exception for handling cases where a user already exists
+    public static class UserAlreadyExistsException extends Exception {
+        public UserAlreadyExistsException(String message) {
+            super(message);
+        }
+    }
 }

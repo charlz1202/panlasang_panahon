@@ -1,85 +1,89 @@
 <template>
-  <div class="container d-flex flex-column min-vh-100 justify-content-center align-items-center" style="max-width: 600px">
+  <div
+    class="container d-flex flex-column min-vh-100 justify-content-center align-items-center"
+    style="max-width: 600px"
+  >
     <h2 class="mb-3">Panlasang Panahon</h2>
     <div class="row" style="max-width: 300px">
       <form class="form-login" @submit.prevent="loginUser">
-        <input class="form-control" type="email" v-model="email" placeholder="Email" required />
-        <input class="form-control" type="password" v-model="password" placeholder="Password" required />
+        <input
+          class="form-control"
+          type="email"
+          v-model="email"
+          placeholder="Email"
+          required
+        />
+        <input
+          class="form-control"
+          type="password"
+          v-model="password"
+          placeholder="Password"
+          required
+        />
         <button class="btn btn-primary w-100 mt-2" type="submit">Login</button>
       </form>
-      <p class="mt-3">Don't have an account? <a href="#" @click="redirectToRegistration">Register here</a></p>
-      <p v-if="loginError" class="text-danger">{{ loginError }}</p> <!-- Error message for invalid login -->
+      <p class="mt-3">
+        Don't have an account?
+        <a href="#" @click.prevent="redirectToRegistration">Register here</a>
+      </p>
+      <p v-if="loginError" class="text-danger">{{ loginError }}</p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'LoginPage',
-
-   beforeRouteEnter(to, from, next) {
-    // Check if the user is already logged in
-    if (localStorage.getItem('user')) {
-      next('/shop'); // Redirect to shop if the user is already logged in
-    } else {
-      next(); // Proceed normally to login page
-    }
-  },
-  
+  name: "LoginPage",
   data() {
     return {
-      email: '',
-      password: '',
-      loginError: '',  // Error message variable
+      email: "",
+      password: "",
+      loginError: "", // Stores login error messages
     };
   },
-  methods: {
-async loginUser() {
-  try {
-    const response = await fetch('http://localhost:8080/api/users/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: this.email,
-        password: this.password,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      // Save user data and token in localStorage
-      const user = {
-        id: data.id,
-        email: data.email,
-        fullname: data.fullname,
-        location: data.location,  // Assuming location is returned from the backend
-      };
-      const token = data.token;  // Assuming token is returned from the backend
-
-      // Save user info and token in localStorage
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('authToken', token);  // Save the token
-
-      this.$emit('login');
-      console.log('Login successful, redirecting...');
-
-      const redirectTo = this.$route.query.redirect || '/shop'; // Check if there is a redirect query param
-      console.log(`Redirecting to: ${redirectTo}`);
-      this.$router.push(redirectTo);  // Redirect to the appropriate page
+  beforeRouteEnter(to, from, next) {
+    const isAuthenticated = localStorage.getItem("authToken");
+    if (isAuthenticated) {
+      next("/shop"); // Redirect to /shop if already logged in
     } else {
-      this.loginError = data.message || 'Invalid credentials'; // Display error message on the page
+      next(); // Proceed to login page
     }
-  } catch (error) {
-    console.error('Error during login:', error);
-    this.loginError = 'Failed to login. Please check the console for details.';
-  }
-},
+  },
+  methods: {
+    async loginUser() {
+      try {
+        const response = await fetch("http://localhost:8080/api/users/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: this.email,
+            password: this.password,
+          }),
+        });
 
+        const data = await response.json();
+
+        if (response.ok) {
+          // Save user and token in localStorage
+          localStorage.setItem("user", JSON.stringify(data.user));
+          localStorage.setItem("authToken", data.token);
+
+          // Redirect to the intended page or /shop
+          const redirectTo = this.$route.query.redirect || "/shop";
+          this.$router.push(redirectTo);
+        } else {
+          // Show error message from server or default
+          this.loginError = data.message || "Invalid email or password.";
+        }
+      } catch (error) {
+        console.error("Login failed:", error);
+        this.loginError = "An unexpected error occurred. Please try again.";
+      }
+    },
     redirectToRegistration() {
-      this.$router.push('/register');
+      this.$router.push("/register");
     },
   },
 };

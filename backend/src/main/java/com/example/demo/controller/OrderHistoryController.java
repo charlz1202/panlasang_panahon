@@ -25,7 +25,7 @@ public class OrderHistoryController {
     // Retrieve order history for a specific user
     @GetMapping("/{userId}")
     public ResponseEntity<?> getOrderHistory(@PathVariable Long userId) {
-        List<OrderHistory> orderHistory = orderHistoryService.getOrderHistory(userId);
+        List<OrderHistory> orderHistory = orderHistoryService.getOrderHistoryByUserId(userId);
 
         if (orderHistory.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

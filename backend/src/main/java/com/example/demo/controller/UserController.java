@@ -17,54 +17,62 @@ import com.example.demo.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8081") // Allows frontend on localhost:8081
 public class UserController {
 
     @Autowired
     private UserService userService;
 
+    // Registration endpoint
     @PostMapping("/register")
     public ResponseEntity<Object> registerUser(@RequestBody User user) {
         try {
+            // Register user via the service
             userService.registerUser(user);
             return ResponseEntity.ok().body("{\"message\": \"User registered successfully\"}");
         } catch (Exception e) {
-            return ResponseEntity.status(400).body("{\"message\": \"Failed to register user: " + e.getMessage() + "\"}");
+            // Handle error gracefully with a proper response message
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\": \"Failed to register user: " + e.getMessage() + "\"}");
         }
     }
-    
+
+    // Login endpoint
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
-        // Log the incoming request for troubleshooting
-        System.out.println("Attempting login for email: " + user.getEmail());
-    
-        // Authenticate the user
-        boolean isAuthenticated = userService.authenticate(user.getEmail(), user.getPassword());
-        if (isAuthenticated) {
-            User authenticatedUser = userService.getUserByEmail(user.getEmail());
-            
-            // If user is found, return user details
-            if (authenticatedUser != null) {
-                Map<String, Object> response = new HashMap<>();
-                response.put("id", authenticatedUser.getId());
-                response.put("fullname", authenticatedUser.getFullname());
-                response.put("email", authenticatedUser.getEmail());
-                response.put("phone", authenticatedUser.getPhone());
-                response.put("location", authenticatedUser.getLocation());
-                response.put("address", authenticatedUser.getAddress());
-    
-                return ResponseEntity.ok().body(response);
+        try {
+            // Log the incoming request for troubleshooting
+            System.out.println("Attempting login for email: " + user.getEmail());
+
+            // Authenticate the user via the service
+            boolean isAuthenticated = userService.authenticate(user.getEmail(), user.getPassword());
+
+            if (isAuthenticated) {
+                // Retrieve the authenticated user from the service
+                User authenticatedUser = userService.getUserByEmail(user.getEmail());
+
+                // If the user exists in the database, return user details
+                if (authenticatedUser != null) {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("id", authenticatedUser.getId());
+                    response.put("fullname", authenticatedUser.getFullname());
+                    response.put("email", authenticatedUser.getEmail());
+                    response.put("phone", authenticatedUser.getPhone());
+                    response.put("location", authenticatedUser.getLocation());
+                    response.put("address", authenticatedUser.getAddress());
+
+                    // Return user data with OK status
+                    return ResponseEntity.ok().body(response);
+                } else {
+                    // User not found after authentication, return NOT_FOUND
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\": \"User not found in database\"}");
+                }
             } else {
-                // User was not found after authentication, return not found response
-                System.out.println("User not found in database.");
-                return ResponseEntity.notFound().build();
+                // Authentication failed, invalid email or password
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Invalid email or password\"}");
             }
-        } else {
-            // Authentication failed due to invalid password
-            System.out.println("Invalid email or password for user: " + user.getEmail());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Invalid email or password\"}");
+        } catch (Exception e) {
+            // Handle any errors that might occur during login
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"message\": \"Internal server error: " + e.getMessage() + "\"}");
         }
     }
-    
-    
 }

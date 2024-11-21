@@ -15,6 +15,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "orders")
@@ -26,14 +27,15 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user; // Relation with User table
+    private User user;
 
     @Column(name = "datetime", nullable = false)
-    private LocalDateTime datetime; // Order date and time
+    private LocalDateTime datetime;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     @Column(name = "weather", nullable = false)
-    private Weather weather; // Weather (cold, hot, rainy)
+    private Weather weather; // Weather field (HOT, COLD, RAINY)
 
     @ManyToMany
     @JoinTable(
@@ -41,10 +43,10 @@ public class Order {
         joinColumns = @JoinColumn(name = "order_id"),
         inverseJoinColumns = @JoinColumn(name = "item_id")
     )
-    private List<Item> items; // Relation with Item table
+    private List<Item> items;
 
     @Column(name = "price", nullable = false)
-    private Double price; // Total price of the order
+    private Double price;
 
     // Getters and Setters
     public Long getId() {

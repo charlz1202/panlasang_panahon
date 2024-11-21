@@ -9,6 +9,4 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Optionally import JS for 
 // Optional: Import Bootstrap Icons if you need them
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-const app = createApp(App);
-app.use(router);  // Use the router
-app.mount('#app');
+createApp(App).use(router).mount('#app');
