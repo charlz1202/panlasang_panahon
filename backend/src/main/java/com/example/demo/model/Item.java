@@ -1,10 +1,6 @@
 package com.example.demo.model;
 
 import java.util.List;
-
-import com.example.demo.deserializer.CategoryDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -31,7 +27,7 @@ public class Item {
         DRINK, DESSERT, MAIN_DISH
     }
 
-    @JsonDeserialize(using = CategoryDeserializer.class)
+   // @JsonDeserialize(using = CategoryDeserializer.class)
     private Category category;
 
     // Reference to the Weather enum defined in another file

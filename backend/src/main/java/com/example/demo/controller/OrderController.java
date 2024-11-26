@@ -40,8 +40,8 @@ public class OrderController {
         }
 
         try {
-            // Extract user ID from the token (you may need to decode the token to get the user info)
-            Long userId = getUserIdFromToken(token); // Implement this method as per your auth logic
+            // Extract user ID from the token
+            Long userId = getUserIdFromToken(token); 
 
             // Fetch order history for the user
             List<Order> orders = orderService.getOrdersByUserId(userId);
